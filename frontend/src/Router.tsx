@@ -3,7 +3,8 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import AuthLayout from './components/Auth/AuthLayout';
-import Signup from './components/Auth/SignupComponent';
+import Signup from './pages/Signup';
+import SignupComplete from './components/Auth/SignupComplete';
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: 'signup',
         element: <Signup />,
+      },
+      {
+        path: 'signup-complete',
+        element: <SignupComplete />,
       },
     ],
   },

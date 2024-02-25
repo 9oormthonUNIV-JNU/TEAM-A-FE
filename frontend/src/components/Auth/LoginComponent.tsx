@@ -1,3 +1,4 @@
+import { FunctionComponent } from 'react';
 import { TextField, Button } from '@mui/material';
 import styled from 'styled-components';
 import kakaoLogo from '../../assets/images/kakao.png';
@@ -22,7 +23,7 @@ const Wrapper = styled.div`
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 0px 0px var(--padding-sm);
+  padding: 0rem 0rem var(--padding-sm);
   text-align: center;
   font-size: var(--font-size-21xl);
 `;
@@ -30,11 +31,11 @@ const EmailInputFrame = styled(TextField)`
   border: none;
   background-color: transparent;
   align-self: stretch;
-  height: 64px;
+  height: 4rem;
   font-family: var(--font-pretendard);
   font-weight: 500;
   font-size: var(--font-size-5xl);
-  color: var(--color-gray);
+  color: var(--color-gray-100);
 `;
 const Div = styled.div`
   position: relative;
@@ -49,38 +50,37 @@ const EmailInputFrameParent = styled.div`
   flex-direction: column;
   align-items: flex-end;
   justify-content: flex-start;
-  gap: 17px 0px;
-  color: var(--color-gray);
+  gap: 1.063rem 0rem;
+  color: var(--color-gray-100);
 `;
-const KakaoTalkLoginButton = styled(Button)`
-  width: 520px;
+const LoginButton = styled(Button)`
+  width: 32.5rem;
   flex: 0.7031;
 `;
-const KakaoTalkLoginButton1 = styled(Button)`
-  width: 520px;
-  flex: 0.875;
+const KakaoTalkLoginButton = styled(Button)`
+  width: 32.5rem;
+  flex: 0.7031;
 `;
-const KakaoTalkLoginButton2 = styled(Button)`
-  width: 520px;
-  flex: 1;
+const NaverLoginButton = styled(Button)`
+  width: 32.5rem;
+  flex: 0.7031;
 `;
 const LoginButtonFrame = styled.div`
-  width: 520px;
+  width: 32.5rem;
   flex: 1;
   overflow-x: auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 0px 0px var(--padding-8xs);
+  padding: 0rem 0rem var(--padding-8xs);
   box-sizing: border-box;
-  gap: 16px 0px;
+  gap: 1rem 0rem;
   max-width: 100%;
 `;
 const B = styled.b`
-  text-decoration: none;
   position: relative;
-  color: var(--color-dodgerblue);
+  color: var(--color-dodgerblue-200);
   @media screen and (max-width: 450px) {
     font-size: var(--font-size-base);
   }
@@ -90,32 +90,32 @@ const NoAccountMessageFrame = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 16px 0px;
+  gap: 1rem 0rem;
 `;
 const FrameParentRoot = styled.footer`
-  width: 560px;
-  height: 779px;
+  width: 35rem;
+  height: 48.688rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 0px var(--padding-xl);
+  padding: 0rem var(--padding-xl);
   box-sizing: border-box;
-  gap: 79px 0px;
+  gap: 4.938rem 0rem;
   max-width: 100%;
   text-align: left;
   font-size: var(--font-size-xl);
   color: var(--color-black);
   font-family: var(--font-pretendard);
   @media screen and (max-width: 700px) {
-    gap: 79px 0px;
+    gap: 4.938rem 0rem;
   }
   @media screen and (max-width: 450px) {
-    gap: 79px 0px;
+    gap: 4.938rem 0rem;
   }
 `;
 
-const LoginComponent = () => {
+const LoginComponent: FunctionComponent = () => {
   return (
     <FrameParentRoot>
       <Wrapper>
@@ -153,7 +153,7 @@ const LoginComponent = () => {
         <Div>아이디/비밀번호 찾기</Div>
       </EmailInputFrameParent>
       <LoginButtonFrame>
-        <KakaoTalkLoginButton
+        <LoginButton
           disableElevation={true}
           variant="contained"
           sx={{
@@ -167,8 +167,8 @@ const LoginComponent = () => {
           }}
         >
           로그인하기
-        </KakaoTalkLoginButton>
-        <KakaoTalkLoginButton1
+        </LoginButton>
+        <KakaoTalkLoginButton
           startIcon={<img width="40px" height="40px" src={kakaoLogo} />}
           disableElevation={true}
           variant="contained"
@@ -183,8 +183,8 @@ const LoginComponent = () => {
           }}
         >
           카카오로 로그인
-        </KakaoTalkLoginButton1>
-        <KakaoTalkLoginButton2
+        </KakaoTalkLoginButton>
+        <NaverLoginButton
           startIcon={<img width="48px" height="48px" src={naverLogo} />}
           disableElevation={true}
           variant="contained"
@@ -199,11 +199,11 @@ const LoginComponent = () => {
           }}
         >
           네이버로 로그인
-        </KakaoTalkLoginButton2>
+        </NaverLoginButton>
       </LoginButtonFrame>
       <NoAccountMessageFrame>
         <Div>아직 회원이 아니신가요?</Div>
-        <NavLink to={'/auth/signup'}>
+        <NavLink to={'/auth/signup'} style={{ textDecoration: 'none' }}>
           <B>회원가입</B>
         </NavLink>
       </NoAccountMessageFrame>

@@ -1,8 +1,8 @@
 import { FunctionComponent } from 'react';
 import { Button } from '@mui/material';
 import styled from 'styled-components';
-import naverLogo from '../../assets/images/naver.png';
 import kakaoLogo from '../../assets/images/kakao.png';
+import naverLogo from '../../assets/images/naver.png';
 
 const H = styled.h2`
   margin: 0;
@@ -26,14 +26,14 @@ const Sns = styled.div`
 `;
 const KakaoBtn = styled(Button)`
   align-self: stretch;
-  flex: 0.875;
+  flex: 1;
   @media screen and (max-width: 450px) {
     padding-left: var(--padding-xl);
     padding-right: var(--padding-xl);
     box-sizing: border-box;
   }
 `;
-const KakaoBtn1 = styled(Button)`
+const NaverBtn = styled(Button)`
   align-self: stretch;
   flex: 1;
   @media screen and (max-width: 450px) {
@@ -42,14 +42,14 @@ const KakaoBtn1 = styled(Button)`
     box-sizing: border-box;
   }
 `;
-const NaverLogin = styled.div`
+const LoginWrapper = styled.div`
   align-self: stretch;
-  flex: 1;
+  flex: 0.6;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 16px 0px;
+  gap: 1rem 0rem;
 `;
 const SnsButtons = styled.div`
   align-self: stretch;
@@ -58,43 +58,44 @@ const SnsButtons = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 34px 0px;
+  gap: 2.125rem 0rem;
   font-size: var(--font-size-xl);
   @media screen and (max-width: 700px) {
-    gap: 34px 0px;
+    gap: 2.125rem 0rem;
   }
 `;
 const SignUpButton = styled.div`
-  width: 560px;
+  width: 35rem;
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 0px var(--padding-xl);
+  padding: 0rem var(--padding-xl);
   box-sizing: border-box;
-  gap: 47px 0px;
+  gap: 2.938rem 0rem;
   max-width: 100%;
   @media screen and (max-width: 700px) {
-    gap: 47px 0px;
+    gap: 2.938rem 0rem;
   }
 `;
 const FrameParentRoot = styled.section`
   align-self: stretch;
-  height: 442px;
+  height: 27.625rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 57px 0px;
+  gap: 3.563rem 0rem;
   max-width: 100%;
   text-align: center;
   font-size: var(--font-size-21xl);
   color: var(--color-black);
   font-family: var(--font-pretendard);
   @media screen and (max-width: 700px) {
-    gap: 57px 0px;
+    gap: 3.563rem 0rem;
   }
+  margin-bottom: -5%;
 `;
 
 const SignupUpperComponent: FunctionComponent = () => {
@@ -104,7 +105,7 @@ const SignupUpperComponent: FunctionComponent = () => {
         <H>회원가입</H>
         <SnsButtons>
           <Sns>SNS 계정으로 간편하게 회원가입</Sns>
-          <NaverLogin>
+          <LoginWrapper>
             <KakaoBtn
               startIcon={<img width="40px" height="40px" src={kakaoLogo} />}
               disableElevation={true}
@@ -120,7 +121,7 @@ const SignupUpperComponent: FunctionComponent = () => {
             >
               카카오로 시작하기
             </KakaoBtn>
-            <KakaoBtn1
+            <NaverBtn
               startIcon={<img width="48px" height="48px" src={naverLogo} />}
               disableElevation={true}
               variant="contained"
@@ -134,8 +135,8 @@ const SignupUpperComponent: FunctionComponent = () => {
               }}
             >
               네이버로 시작하기
-            </KakaoBtn1>
-          </NaverLogin>
+            </NaverBtn>
+          </LoginWrapper>
         </SnsButtons>
       </SignUpButton>
     </FrameParentRoot>
