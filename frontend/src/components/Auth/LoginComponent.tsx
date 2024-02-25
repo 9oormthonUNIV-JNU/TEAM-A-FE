@@ -3,7 +3,9 @@ import { TextField, Button } from '@mui/material';
 import styled from 'styled-components';
 import kakaoLogo from '../../assets/images/kakao.png';
 import naverLogo from '../../assets/images/naver.png';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { postLogin } from '../../utils/api/Auth/auth';
 
 const H = styled.h2`
   margin: 0;
@@ -55,6 +57,7 @@ const EmailInputFrameParent = styled.div`
 `;
 const LoginButton = styled(Button)`
   width: 32.5rem;
+
   flex: 0.7031;
 `;
 const KakaoTalkLoginButton = styled(Button)`
@@ -68,14 +71,15 @@ const NaverLoginButton = styled(Button)`
 const LoginButtonFrame = styled.div`
   width: 32.5rem;
   flex: 1;
-  overflow-x: auto;
+  /* overflow-x: auto; */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
   padding: 0rem 0rem var(--padding-8xs);
   box-sizing: border-box;
-  gap: 1rem 0rem;
+  height: 100%;
+  gap: 0.8rem 0rem;
   max-width: 100%;
 `;
 const B = styled.b`
@@ -114,8 +118,39 @@ const FrameParentRoot = styled.footer`
     gap: 4.938rem 0rem;
   }
 `;
+const ErrorSpan = styled.span`
+  color: #f00;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: normal;
+`;
+
+interface IForm {
+  message?: string;
+  email: string;
+  password: string;
+}
 
 const LoginComponent: FunctionComponent = () => {
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IForm>();
+
+  const onValid = async (data: IForm) => {
+    try {
+      console.log(data);
+      const result = await postLogin(data);
+      if (result?.status === 200) {
+        navigate('/');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <FrameParentRoot>
       <Wrapper>
@@ -135,6 +170,9 @@ const LoginComponent: FunctionComponent = () => {
             },
             '& .MuiInputBase-input': { color: '#8f8f8f' },
           }}
+          {...register('email', {
+            required: '이메일을 입력하세요.',
+          })}
         />
         <EmailInputFrame
           placeholder="비밀번호 입력"
@@ -149,11 +187,19 @@ const LoginComponent: FunctionComponent = () => {
             },
             '& .MuiInputBase-input': { color: '#8f8f8f' },
           }}
+          {...register('password', { required: '비밀번호를 입력해 주세요' })}
         />
         <Div>아이디/비밀번호 찾기</Div>
       </EmailInputFrameParent>
+
       <LoginButtonFrame>
+        {errors && (
+          <ErrorSpan>
+            {errors.email ? errors.email.message : errors.password?.message}
+          </ErrorSpan>
+        )}
         <LoginButton
+          onClick={handleSubmit(onValid)}
           disableElevation={true}
           variant="contained"
           sx={{
@@ -168,6 +214,7 @@ const LoginComponent: FunctionComponent = () => {
         >
           로그인하기
         </LoginButton>
+
         <KakaoTalkLoginButton
           startIcon={<img width="40px" height="40px" src={kakaoLogo} />}
           disableElevation={true}

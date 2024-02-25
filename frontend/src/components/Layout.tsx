@@ -1,3 +1,11 @@
+import { Outlet } from 'react-router-dom';
+import LoadingScreen from './LoadingScreen';
+
 export default function Layout() {
-  return <div>1</div>;
+  return (
+    <>
+      <LoadingScreen />
+      <Outlet />
+    </>
+  );
 }

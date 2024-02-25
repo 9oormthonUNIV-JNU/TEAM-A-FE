@@ -3,16 +3,11 @@ import { TextField, Button } from '@mui/material';
 
 import styled from 'styled-components';
 import SignupUpperComponent from './SignupUpperComponent';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { postEmailConfirm, postSignup } from '../../utils/api/Auth/auth';
+import { dataTagSymbol } from '@tanstack/react-query';
 
-const VectorChild = styled.img`
-  align-self: stretch;
-  position: relative;
-  max-width: 100%;
-  overflow: hidden;
-  max-height: 100%;
-  flex-shrink: 0;
-`;
 const B = styled.b`
   position: relative;
   @media screen and (max-width: 950px) {
@@ -327,14 +322,65 @@ const SignupRoot = styled.div`
     gap: 6.313rem 0rem;
   }
 `;
+const ErrorText = styled.span`
+  color: #f00;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+`;
+interface IForm {
+  email: string;
+  password: string;
+  password2: string;
+  nickname: string;
+}
 
 const Signup: FunctionComponent = () => {
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+    reset,
+    getValues,
+  } = useForm<IForm>();
+
+  const navigate = useNavigate();
+
+  const emValid = async () => {
+    const email = getValues('email');
+    try {
+      await postEmailConfirm(email);
+    } catch (error) {
+      //백과 통신후 에러 표시 하기 setError
+      setError('email', { message: `${error}` });
+      console.log(error);
+    }
+  };
+
+  const onValid = async (data: IForm) => {
+    const { email, password, password2, nickname } = data;
+
+    if (password !== password2) {
+      setError('password', { message: '* 비밀번호가 일치하지 않습니다' });
+    }
+    try {
+      const formData = { email, password, nickname };
+      const result = await postSignup(formData);
+      if (result?.status === 200) {
+        navigate('/auth/signup-complete');
+      }
+    } catch (error) {
+      //닉네임 중복체크, 비밀번호 맞지않음, 비밀번호 중복체크의 에러표시는 만들어지면 체크하기 setError를 통해서.
+      console.log(error);
+    }
+  };
   return (
     <SignupRoot>
       <SignupUpperComponent />
       <PasswordInputFrame1>
         <Vector>
-          <VectorChild loading="eager" alt="" src="/vector-1.svg" />
           <EmailFrame>
             <EmailValidation>
               <PasswordInput>
@@ -358,8 +404,12 @@ const Signup: FunctionComponent = () => {
                           },
                           '& .MuiInputBase-input': { color: '#8f8f8f' },
                         }}
+                        {...register('email', {
+                          required: '* 이메일을 입력하세요',
+                        })}
                       />
                       <EmailButton
+                        onClick={emValid}
                         disableElevation={true}
                         variant="contained"
                         sx={{
@@ -408,6 +458,17 @@ const Signup: FunctionComponent = () => {
                         확인
                       </EmailButton>
                     </EmailInputLabel>
+                    {errors.email ? (
+                      <ErrorText style={{ marginBottom: '-2%' }}>
+                        {errors.email.message}
+                      </ErrorText>
+                    ) : (
+                      <ErrorText
+                        style={{ color: 'white', marginBottom: '-2%' }}
+                      >
+                        1
+                      </ErrorText>
+                    )}
                   </Passwordinputframe>
                 </Emailfield>
               </PasswordInput>
@@ -419,6 +480,7 @@ const Signup: FunctionComponent = () => {
                       영문, 숫자를 포함한 8자 이상의 비밀번호를 입력해주세요
                     </Div>
                     <Passwordconfirminputlabel
+                      type="password"
                       placeholder="비밀번호 입력"
                       variant="outlined"
                       sx={{
@@ -431,10 +493,16 @@ const Signup: FunctionComponent = () => {
                         },
                         '& .MuiInputBase-input': { color: '#8f8f8f' },
                       }}
+                      {...register('password', {
+                        required: '비밀번호를 입력해 주세요',
+                        pattern: {
+                          value: /^[A-Za-z0-9]{8,}$/,
+                          message: '조건에 맞지 않는 비밀번호입니다',
+                        },
+                      })}
                     />
-                  </PasswordText>
-                  <Existingmemberwarning>
                     <Passwordconfirminputlabel
+                      type="password"
                       placeholder="비밀번호 확인"
                       variant="outlined"
                       sx={{
@@ -447,7 +515,19 @@ const Signup: FunctionComponent = () => {
                         },
                         '& .MuiInputBase-input': { color: '#8f8f8f' },
                       }}
+                      {...register('password2', {
+                        required: true,
+                      })}
                     />
+                    {errors.password ? (
+                      <ErrorText>{errors.password?.message}</ErrorText>
+                    ) : (
+                      <ErrorText style={{ color: 'white' }}>1</ErrorText>
+                    )}
+                    {}
+                  </PasswordText>
+
+                  <Existingmemberwarning>
                     <NicknameInput>
                       <B3>닉네임</B3>
                       <Passwordconfirminputlabel
@@ -463,10 +543,22 @@ const Signup: FunctionComponent = () => {
                           },
                           '& .MuiInputBase-input': { color: '#8f8f8f' },
                         }}
+                        {...register('nickname', {
+                          required: '* 닉네임을 입력해 주세요',
+                        })}
                       />
                     </NicknameInput>
+                    {errors.nickname ? (
+                      <ErrorText style={{ margin: '-5% 0' }}>
+                        {errors.nickname.message}
+                      </ErrorText>
+                    ) : (
+                      <ErrorText style={{ margin: '-5% 0', color: 'white' }}>
+                        1
+                      </ErrorText>
+                    )}
                   </Existingmemberwarning>
-                  <SignupButtonFrame>
+                  <SignupButtonFrame onClick={handleSubmit(onValid)}>
                     <SignUpButton
                       disableElevation={true}
                       variant="contained"
