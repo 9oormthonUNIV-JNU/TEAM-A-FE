@@ -1,3 +1,10 @@
+import CarouselPosts from '../components/Home/CarouselPosts';
+
 export default function Home() {
-  return <div>home</div>;
+  return (
+    <div>
+      <div>1</div>
+      <CarouselPosts />
+    </div>
+  );
 }

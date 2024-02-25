@@ -342,7 +342,7 @@ const Signup: FunctionComponent = () => {
     handleSubmit,
     setError,
     formState: { errors },
-    reset,
+    // reset,
     getValues,
   } = useForm<IForm>();
 
