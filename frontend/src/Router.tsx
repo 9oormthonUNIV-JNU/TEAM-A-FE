@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import AuthLayout from './components/Auth/AuthLayout';
 import Signup from './pages/Signup';
 import SignupComplete from './components/Auth/SignupComplete';
+import SearchPassword from './components/Auth/SearchPassword';
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: 'signup-complete',
         element: <SignupComplete />,
+      },
+      {
+        path: 'search-password',
+        element: <SearchPassword />,
       },
     ],
   },

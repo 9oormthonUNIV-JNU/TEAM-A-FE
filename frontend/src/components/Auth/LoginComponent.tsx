@@ -189,7 +189,12 @@ const LoginComponent: FunctionComponent = () => {
           }}
           {...register('password', { required: '비밀번호를 입력해 주세요' })}
         />
-        <Div>아이디/비밀번호 찾기</Div>
+        <NavLink
+          to={'/auth/search-password'}
+          style={{ textDecoration: 'none', color: '#8F8F8F' }}
+        >
+          <Div>비밀번호 찾기</Div>
+        </NavLink>
       </EmailInputFrameParent>
 
       <LoginButtonFrame>

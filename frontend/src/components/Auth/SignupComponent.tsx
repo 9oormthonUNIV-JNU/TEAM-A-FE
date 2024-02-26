@@ -6,7 +6,7 @@ import SignupUpperComponent from './SignupUpperComponent';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { postEmailConfirm, postSignup } from '../../utils/api/Auth/auth';
-import { dataTagSymbol } from '@tanstack/react-query';
+// import { dataTagSymbol } from '@tanstack/react-query';
 
 const B = styled.b`
   position: relative;
