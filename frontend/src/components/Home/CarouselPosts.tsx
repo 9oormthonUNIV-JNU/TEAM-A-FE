@@ -1,4 +1,7 @@
+import { styled } from 'styled-components';
 import MultiCarousel from './MultiCarousel';
+// import { useEffect } from 'react';
+// import { bannerProduct } from '../../utils/api/MainPage/product';
 
 const images = [
   {
@@ -24,11 +27,20 @@ const images = [
 ];
 
 export default function CarouselPosts() {
+  // useEffect(() => {
+  //   const result = bannerProduct();
+  //   console.log(result);
+  // }, []);
   return (
     <MultiCarousel>
       {images.map((item) => {
-        return <img src={item.imgPath}></img>;
+        return <CarouselImg src={item.imgPath} />;
       })}
     </MultiCarousel>
   );
 }
+
+const CarouselImg = styled.img`
+  width: 100%;
+  height: 500px;
+`;

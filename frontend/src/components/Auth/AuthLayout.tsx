@@ -1,6 +1,7 @@
 import { FunctionComponent, type CSSProperties } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import styled from 'styled-components';
+import mainLogo from '../../assets/images/mainLogo.svg';
 
 export type FrameComponent1Type = {
   /** Style props */
@@ -15,11 +16,12 @@ const Iconoiruser = styled.div`
   flex-shrink: 0;
   display: none;
 `;
-const Logo = styled.b`
+const Logo = styled.img`
   position: relative;
 `;
 const LogoWrapper = styled.div<{ logoPadding?: CSSProperties['padding'] }>`
   width: 95rem;
+  height: 2rem;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -60,7 +62,7 @@ const AuthLayout: FunctionComponent<FrameComponent1Type> = ({
         <Iconoiruser />
         <NavLink to={'/'} style={{ textDecoration: 'none' }}>
           <LogoWrapper logoPadding={logoPadding}>
-            <Logo>logo</Logo>
+            <Logo src={mainLogo} />
           </LogoWrapper>
         </NavLink>
       </IconoiruserParentRoot>

@@ -3,12 +3,51 @@ import LoadingScreen from './LoadingScreen';
 import styled from 'styled-components';
 import SearchIcon from '@mui/icons-material/Search';
 import { searchProduct } from '../utils/api/MainPage/product';
+import mainLogo from '../assets/images/mainLogo.svg';
+import { useEffect, useRef, useState } from 'react';
+import RecentSearch from './RecentSearch';
+import { searchState } from '../atoms';
+import { useSetRecoilState } from 'recoil';
 
 const FundingFrame = () => {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState('');
+  const ref = useRef(null);
+
+  const setSearchHistory = useSetRecoilState(searchState);
+
+  const handleClickOutside = (e: MouseEvent) => {
+    if (ref.current)
+      if (!ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+  };
+
+  useEffect(() => {
+    if (open) {
+      window.addEventListener('click', handleClickOutside);
+    }
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+    };
+  }, [open]);
+
+  const openHandler = () => {
+    if (open === true) {
+      setOpen(false);
+    } else if (open === false) {
+      setOpen(true);
+    }
+  };
+  const handleInput = (e: any) => {
+    setValue(e.target.value);
+  };
   //useSearchParams 공부해서 적용시켜보기
   const searchHandler = (e: any) => {
     e.preventDefault();
     const value = e.target[0].value;
+    //유저가 있다면 들어가게 설정
+    setSearchHistory((prevHistory) => [...prevHistory, value]);
     try {
       const result = searchProduct(value);
       console.log(result);
@@ -21,15 +60,25 @@ const FundingFrame = () => {
     <FundingFrameRoot>
       <LogoText>
         <NavLink to={'/'} style={{ textDecoration: 'none' }}>
-          <Logo>logo</Logo>
+          <Logo src={mainLogo} />
         </NavLink>
-        <IconoirSearch onSubmit={searchHandler}>
+        <IconoirSearch onSubmit={searchHandler} ref={ref}>
           <IconoirSearchChild />
-          <Input placeholder="원하는 펀딩 제품을 검색해주세요" type="text" />
+          <Input
+            placeholder="원하는 펀딩 제품을 검색해주세요"
+            type="text"
+            onClick={openHandler}
+            // name={open}
+            value={value}
+            onChange={handleInput}
+          />
           <SearchButton>
             <SearchIcon fontSize="large" sx={{ color: '#2E82F2' }} />
           </SearchButton>
         </IconoirSearch>
+
+        <RecentSearch open={open} />
+
         <NavLink
           to={'/auth/login'}
           style={{ textDecoration: 'none', color: 'black' }}
@@ -68,7 +117,7 @@ const SearchButton = styled.button`
   cursor: pointer;
 `;
 
-const Logo = styled.b`
+const Logo = styled.img`
   position: relative;
   flex-shrink: 0;
 `;
@@ -124,6 +173,7 @@ const Div = styled.div`
   flex-shrink: 0;
 `;
 const LogoText = styled.div`
+  position: relative;
   margin-top: 1%;
   width: 97.5rem;
   display: flex;
