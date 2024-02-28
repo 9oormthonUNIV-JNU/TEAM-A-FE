@@ -6,6 +6,7 @@ import AuthLayout from './components/Auth/AuthLayout';
 import Signup from './pages/Signup';
 import SignupComplete from './components/Auth/SignupComplete';
 import SearchPassword from './components/Auth/SearchPassword';
+import CategoryProducts from './pages/CategoryProducts';
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
       {
         path: '',
         element: <Home />,
+      },
+      {
+        path: '/category/:categoryId',
+        element: <CategoryProducts />,
       },
     ],
   },

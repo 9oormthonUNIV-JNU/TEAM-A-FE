@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import LoadingScreen from './LoadingScreen';
 import styled from 'styled-components';
 import SearchIcon from '@mui/icons-material/Search';
@@ -8,11 +8,15 @@ import { useEffect, useRef, useState } from 'react';
 import RecentSearch from './RecentSearch';
 import { searchState } from '../atoms';
 import { useSetRecoilState } from 'recoil';
+import { categoryProduct } from '../utils/api/Products/category';
+// import axios from 'axios';
 
 const FundingFrame = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
   const ref = useRef(null);
+
+  const navigate = useNavigate();
 
   const setSearchHistory = useSetRecoilState(searchState);
 
@@ -21,6 +25,18 @@ const FundingFrame = () => {
       if (!ref.current.contains(e.target as Node)) {
         setOpen(false);
       }
+  };
+
+  const handleNavigateCategory = (e: React.MouseEvent) => {
+    const categoryId = e.target.id;
+    try {
+      const result = categoryProduct(categoryId);
+      console.log(result);
+      // navigate(`/category/${categoryId}`, { state: { result } });
+      navigate(`/category/${categoryId}`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -43,25 +59,31 @@ const FundingFrame = () => {
     setValue(e.target.value);
   };
   //useSearchParams 공부해서 적용시켜보기
-  const searchHandler = (e: any) => {
+  const searchHandler = async (e: any) => {
     e.preventDefault();
     const value = e.target[0].value;
     //유저가 있다면 들어가게 설정
     setSearchHistory((prevHistory) => [...prevHistory, value]);
     try {
-      const result = searchProduct(value);
+      const result = await searchProduct(value);
       console.log(result);
     } catch (error) {
       console.log(error);
     }
     console.log(value);
   };
+
+  // const testApi = async () => {
+  //   const result = await axios.get('http://3.34.57.226:8080/test/token-test');
+  //   console.log(result);
+  // };
   return (
     <FundingFrameRoot>
       <LogoText>
         <NavLink to={'/'} style={{ textDecoration: 'none' }}>
           <Logo src={mainLogo} />
         </NavLink>
+        {/* <button onClick={testApi}>2</button> */}
         <IconoirSearch onSubmit={searchHandler} ref={ref}>
           <IconoirSearchChild />
           <Input
@@ -87,14 +109,30 @@ const FundingFrame = () => {
         </NavLink>
       </LogoText>
       <NavBar>
-        <B>전체</B>
-        <B>테크가전</B>
-        <B>패션</B>
-        <B>뷰티</B>
-        <B>푸드</B>
-        <B>도서</B>
-        <B>굿즈</B>
-        <B>잡화</B>
+        <B id="whole" onClick={(e) => handleNavigateCategory(e)}>
+          전체
+        </B>
+        <B id="tech" onClick={(e) => handleNavigateCategory(e)}>
+          테크가전
+        </B>
+        <B id="fashion" onClick={(e) => handleNavigateCategory(e)}>
+          패션
+        </B>
+        <B id="beauty" onClick={(e) => handleNavigateCategory(e)}>
+          뷰티
+        </B>
+        <B id="food" onClick={(e) => handleNavigateCategory(e)}>
+          푸드
+        </B>
+        <B id="book" onClick={(e) => handleNavigateCategory(e)}>
+          도서
+        </B>
+        <B id="goods" onClick={(e) => handleNavigateCategory(e)}>
+          굿즈
+        </B>
+        <B id="stuff" onClick={(e) => handleNavigateCategory(e)}>
+          잡화
+        </B>
       </NavBar>
     </FundingFrameRoot>
   );
@@ -187,6 +225,7 @@ const LogoText = styled.div`
 `;
 const B = styled.b`
   position: relative;
+  cursor: pointer;
 `;
 const NavBar = styled.div`
   align-self: stretch;

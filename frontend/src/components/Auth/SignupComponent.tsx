@@ -368,6 +368,7 @@ const Signup: FunctionComponent = () => {
     try {
       const formData = { email, password, nickname };
       const result = await postSignup(formData);
+      console.log(result);
       if (result?.status === 200) {
         navigate('/auth/signup-complete');
       }

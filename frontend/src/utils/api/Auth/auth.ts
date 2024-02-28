@@ -1,12 +1,12 @@
 import { api } from '../../customAxios';
 
 export async function postLogin(data: any) {
-  const result = await api.post('/users/login', data);
+  const result = await api.post('/login', data);
   return result;
 }
 
 export async function postSignup(data: any) {
-  const result = await api.post('/users/signup', data);
+  const result = await api.post('/signup', data);
   return result;
 }
 

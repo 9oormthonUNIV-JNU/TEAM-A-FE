@@ -1,7 +1,7 @@
 import { styled } from 'styled-components';
 import MultiCarousel from './MultiCarousel';
-// import { useEffect } from 'react';
-// import { bannerProduct } from '../../utils/api/MainPage/product';
+import { useEffect } from 'react';
+import { bannerProduct } from '../../utils/api/MainPage/product';
 
 const images = [
   {
@@ -27,10 +27,18 @@ const images = [
 ];
 
 export default function CarouselPosts() {
-  // useEffect(() => {
-  //   const result = bannerProduct();
-  //   console.log(result);
-  // }, []);
+  const callBanners = async () => {
+    try {
+      const result = await bannerProduct();
+
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    callBanners();
+  }, []);
   return (
     <MultiCarousel>
       {images.map((item) => {

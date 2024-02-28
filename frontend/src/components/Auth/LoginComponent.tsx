@@ -141,8 +141,9 @@ const LoginComponent: FunctionComponent = () => {
 
   const onValid = async (data: IForm) => {
     try {
-      console.log(data);
       const result = await postLogin(data);
+      console.log(result);
+      // console.log(result.headers.get('Authorization'));
       if (result?.status === 200) {
         navigate('/');
       }

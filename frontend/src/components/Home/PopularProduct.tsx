@@ -2,6 +2,7 @@ import { styled } from 'styled-components';
 import PopularBox from './PopularBox';
 
 const FeaturedFundingAreaParent = styled.section`
+  max-width: 1920px;
   align-self: stretch;
   border-top: 1px solid var(--color-silver);
   box-sizing: border-box;
@@ -39,7 +40,7 @@ const FeaturedFundingArea = styled.div`
   justify-content: flex-start;
   padding: 0rem 0.25rem;
   box-sizing: border-box;
-  max-width: 100%;
+  max-width: 1920px;
 `;
 const FundingBoxParent = styled.div`
   align-self: stretch;

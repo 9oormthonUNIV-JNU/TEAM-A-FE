@@ -9,3 +9,13 @@ export async function bannerProduct() {
   const result = await api.get('/banners/main');
   return result;
 }
+
+export async function uregentProduct() {
+  const result = await api.get('/banners/urgent');
+  return result;
+}
+
+export async function popularProduct() {
+  const result = await api.get('/banners/popular');
+  return result;
+}
