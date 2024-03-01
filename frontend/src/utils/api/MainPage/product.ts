@@ -10,12 +10,12 @@ export async function bannerProduct() {
   return result;
 }
 
-export async function uregentProduct() {
-  const result = await api.get('/banners/urgent');
+export async function urgentProduct() {
+  const result = await api.get('/fundings/urgent');
   return result;
 }
 
 export async function popularProduct() {
-  const result = await api.get('/banners/popular');
+  const result = await api.get('/fundings/popular');
   return result;
 }

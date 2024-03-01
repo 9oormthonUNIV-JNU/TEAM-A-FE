@@ -1,4 +1,10 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import {
+  NavLink,
+  Outlet,
+  useLoaderData,
+  useNavigate,
+  useSubmit,
+} from 'react-router-dom';
 import LoadingScreen from './LoadingScreen';
 import styled from 'styled-components';
 import SearchIcon from '@mui/icons-material/Search';
@@ -9,9 +15,30 @@ import RecentSearch from './RecentSearch';
 import { searchState } from '../atoms';
 import { useSetRecoilState } from 'recoil';
 import { categoryProduct } from '../utils/api/Products/category';
+import { getTokenDuration } from '../utils/tokenHandler';
+
 // import axios from 'axios';
 
+import UserIcon from './Home/UserIcon';
+
 const FundingFrame = () => {
+  const token = useLoaderData();
+  const submit = useSubmit();
+
+  //토큰 관리 로직
+  useEffect(() => {
+    if (!token) return;
+    if (token === 'EXPIRED') {
+      submit(null, { action: '/logout', method: 'post' });
+      return;
+    }
+    const tokenDuration = getTokenDuration();
+
+    setTimeout(() => {
+      submit(null, { action: '/logout', method: 'post' });
+    }, tokenDuration);
+  }, [token, submit]);
+
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
   const ref = useRef(null);
@@ -101,12 +128,19 @@ const FundingFrame = () => {
 
         <RecentSearch open={open} />
 
-        <NavLink
-          to={'/auth/login'}
-          style={{ textDecoration: 'none', color: 'black' }}
-        >
-          <Div>로그인</Div>
-        </NavLink>
+        {token ? (
+          <AvatarWrapper>
+            <CreateFundingsButton>펀딩 생성하기</CreateFundingsButton>
+            <UserIcon />
+          </AvatarWrapper>
+        ) : (
+          <NavLink
+            to={'/auth/login'}
+            style={{ textDecoration: 'none', color: 'black' }}
+          >
+            <Div>로그인</Div>
+          </NavLink>
+        )}
       </LogoText>
       <NavBar>
         <B id="whole" onClick={(e) => handleNavigateCategory(e)}>
@@ -147,6 +181,31 @@ export default function Layout() {
     </>
   );
 }
+
+const AvatarWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  flex-shrink: 0;
+`;
+
+const CreateFundingsButton = styled.button`
+  display: inline-flex;
+  padding: 10px 19px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 10px;
+  background: #2e82f2;
+  color: white;
+  font-size: 20px;
+  border: none;
+  margin-right: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  cursor: pointer;
+`;
 
 const SearchButton = styled.button`
   border: none;
@@ -191,6 +250,12 @@ const Input = styled.input`
 `;
 
 const IconoirSearch = styled.form`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
   width: 37.5rem;
   border-radius: var(--br-21xl);
   background-color: var(--color-white);

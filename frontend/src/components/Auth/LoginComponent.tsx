@@ -6,6 +6,8 @@ import naverLogo from '../../assets/images/naver.png';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { postLogin } from '../../utils/api/Auth/auth';
+import { AxiosError } from 'axios';
+import { getToken } from '../../utils/getToken';
 
 const H = styled.h2`
   margin: 0;
@@ -132,22 +134,29 @@ interface IForm {
 }
 
 const LoginComponent: FunctionComponent = () => {
-  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<IForm>();
+
+  const navigate = useNavigate();
 
   const onValid = async (data: IForm) => {
     try {
       const result = await postLogin(data);
       console.log(result);
-      // console.log(result.headers.get('Authorization'));
-      if (result?.status === 200) {
+      if (result) {
+        getToken(result.headers?.get('Authorization'));
         navigate('/');
+      } else {
+        setError('email', { message: '토큰이 없습니다. 재로그인 해주세요.' });
       }
     } catch (error) {
+      if (error instanceof AxiosError) {
+        setError('email', { message: error.response?.data.error });
+      }
       console.log(error);
     }
   };

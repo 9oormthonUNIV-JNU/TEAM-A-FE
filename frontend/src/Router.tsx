@@ -7,11 +7,15 @@ import Signup from './pages/Signup';
 import SignupComplete from './components/Auth/SignupComplete';
 import SearchPassword from './components/Auth/SearchPassword';
 import CategoryProducts from './pages/CategoryProducts';
+import { logoutAction } from './utils/actions';
+import { getAuthToken } from './utils/tokenHandler';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
+    id: 'root',
+    loader: getAuthToken,
     children: [
       {
         path: '',
@@ -44,6 +48,10 @@ const router = createBrowserRouter([
         element: <SearchPassword />,
       },
     ],
+  },
+  {
+    path: '/logout',
+    action: logoutAction,
   },
 ]);
 
