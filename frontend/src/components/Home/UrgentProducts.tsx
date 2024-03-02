@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'react';
 import styled from 'styled-components';
+import testImg from '../../assets/images/kakao.png';
 
 const H = styled.h1`
   margin: 0;
@@ -75,12 +76,14 @@ const RecentSearchesFrame1 = styled.div`
     min-width: 100%;
   }
 `;
-const FrameWithEllipseChildren = styled.div`
+const FrameWithEllipseChildren = styled.img`
   align-self: stretch;
   height: 17.313rem;
   position: relative;
   border-radius: 50%;
+  width: 100%;
   background-color: var(--color-gainsboro);
+  background-repeat: no-repeat;
 `;
 const EmptyFrame = styled.div`
   position: relative;
@@ -199,19 +202,19 @@ const UrgentProducts: FunctionComponent = () => {
           </RecentSearchesFrame1>
           <SeparatingEllipses>
             <FrameWithEllipseChildren2>
-              <FrameWithEllipseChildren />
+              <FrameWithEllipseChildren src={testImg} />
               <FrameWithEllipseChildren1>
                 <EmptyFrame>23:59:99</EmptyFrame>
               </FrameWithEllipseChildren1>
             </FrameWithEllipseChildren2>
             <FrameWithEllipseChildren2>
-              <FrameWithEllipseChildren />
+              <FrameWithEllipseChildren src={testImg} />
               <Wrapper>
                 <EmptyFrame>71:23:22</EmptyFrame>
               </Wrapper>
             </FrameWithEllipseChildren2>
             <SearchIconAndXmark>
-              <FrameWithEllipseChildren />
+              <FrameWithEllipseChildren src={testImg} />
               <EmptyFrame>23:59:99</EmptyFrame>
             </SearchIconAndXmark>
           </SeparatingEllipses>

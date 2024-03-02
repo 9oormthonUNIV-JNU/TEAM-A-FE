@@ -1,10 +1,8 @@
 import { Button, TextField } from '@mui/material';
-
-import { useState } from 'react';
-
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import { postCodeConfirm, postEmailConfirm } from '../../utils/api/Auth/auth';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { styled } from 'styled-components';
+import { patchPassword } from '../../utils/api/Auth/auth';
 
 const Wrapper = styled.div`
   display: flex;
@@ -66,10 +64,6 @@ const EmailInput = styled(TextField)`
   min-width: 15.188rem;
   max-width: 100%;
 `;
-const EmailButton = styled(Button)`
-  height: 4.063rem;
-  width: 8.5rem;
-`;
 
 const ErrorText = styled.span`
   color: #f00;
@@ -91,49 +85,41 @@ const Buttona = styled(Button)`
   width: 90%;
 `;
 
-export default function SearchPassword() {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [code, setCode] = useState('');
-  const [error, setError] = useState('');
-  const emailConfirmHandler = () => {
-    try {
-      const result = postEmailConfirm(email);
-      console.log(result);
-      // if(result.status === "error"){
-      //   setError(result.error)
-      // }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+export default function ChangePassword() {
+  const { state } = useLocation();
 
-  const codeConfirmHandler = () => {
+  const navigate = useNavigate();
+  const [error, setError] = useState('');
+  const [password, setPassword] = useState('');
+  const [checkPassword, setCheckPassword] = useState('');
+  const onValid = () => {
     try {
-      const result = postCodeConfirm({ email, code });
+      const result = patchPassword({ password, checkPassword });
       console.log(result);
-      if (result.status === 200) {
-        //state를 백에서 받은 이메일로 변경
-        navigate('/auth/change-password', { state: 1 });
-      }
+      navigate('/auth/login');
     } catch (error) {
       console.log(error);
     }
   };
+  useEffect(() => {
+    if (!state) navigate('/');
+  }, [state, navigate]);
+
   return (
     <Wrapper>
-      <H1>비밀번호 찾기</H1>
-      <Span>회원가입 당시 가입한 이메일을 입력해주세요.</Span>
+      <H1>비밀번호 변경하기</H1>
+
       <Span style={{ marginBottom: '3%' }}>
-        해당 이메일로 인증번호가 발송됩니다.
+        변경하실 비밀번호를 입력해 주세요.
       </Span>
 
       <Passwordinputframe>
         <EmailInputLabel>
           <EmailInput
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-            placeholder="  이메일 입력"
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            placeholder="  비밀번호 입력"
             variant="outlined"
             sx={{
               '& fieldset': { borderColor: '#8f8f8f' },
@@ -149,9 +135,10 @@ export default function SearchPassword() {
         </EmailInputLabel>
         <EmailInputLabel>
           <EmailInput
-            onChange={(e) => setCode(e.target.value)}
-            value={code}
-            placeholder="  인증번호 입력"
+            type="password"
+            onChange={(e) => setCheckPassword(e.target.value)}
+            value={checkPassword}
+            placeholder="  비밀번호 확인"
             variant="outlined"
             sx={{
               '& fieldset': { borderColor: '#8f8f8f' },
@@ -164,29 +151,17 @@ export default function SearchPassword() {
               '& .MuiInputBase-input': { color: '#8f8f8f' },
             }}
           />
-          <EmailButton
-            onClick={emailConfirmHandler}
-            disableElevation={true}
-            variant="contained"
-            sx={{
-              textTransform: 'none',
-              color: '#fff',
-              fontSize: '24',
-              background: '#2e83f2',
-              borderRadius: '10px',
-              '&:hover': { background: '#2e83f2' },
-              width: 136,
-              height: 65,
-            }}
-          >
-            인증번호 받기
-          </EmailButton>
         </EmailInputLabel>
       </Passwordinputframe>
-      <ErrorText>{error}</ErrorText>
+      {error ? (
+        <ErrorText>1</ErrorText>
+      ) : (
+        <ErrorText style={{ color: 'white' }}>1</ErrorText>
+      )}
+
       <ButtonWrapper>
         <Buttona
-          onClick={codeConfirmHandler}
+          onClick={onValid}
           sx={{
             background: '#2e83f2',
             borderRadius: '10px',
@@ -200,6 +175,7 @@ export default function SearchPassword() {
         </Buttona>
 
         <Buttona
+          onClick={() => navigate('/')}
           sx={{
             background: '#8F8F8F',
             borderRadius: '10px',
@@ -207,7 +183,6 @@ export default function SearchPassword() {
             color: '#FFFFFF',
             height: 65,
           }}
-          onClick={() => navigate('/auth/login')}
         >
           취소
         </Buttona>
