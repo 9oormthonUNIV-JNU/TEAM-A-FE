@@ -1,8 +1,15 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import styled from 'styled-components';
 import FrameComponent5 from '../components/Products/FundingCreateDate';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from '@mui/material';
 
 const H = styled.h3`
   margin: 0;
@@ -447,18 +454,78 @@ const CreateFundingRoot = styled.form`
     gap: 2.5rem 0rem;
   }
 `;
-
+// const Parent1 = styled.div`
+//   width: 15.5rem;
+//   border-bottom: 1px solid var(--color-gray-100);
+//   box-sizing: border-box;
+//   overflow: hidden;
+//   flex-shrink: 0;
+//   display: flex;
+//   flex-direction: row;
+//   align-items: flex-start;
+//   justify-content: flex-start;
+//   padding: var(--padding-mini) var(--padding-8xs);
+//   gap: 0rem 4.688rem;
+// `;
+// const Div = styled.div`
+//   position: relative;
+//   font-size: var(--font-size-5xl);
+//   font-weight: 500;
+//   font-family: var(--font-pretendard);
+//   color: var(--color-black);
+//   text-align: left;
+//   @media screen and (max-width: 450px) {
+//     font-size: var(--font-size-lgi);
+//   }
+// `;
 const CreateFunding: FunctionComponent = () => {
+  const [age, setAge] = useState('');
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setAge(event.target.value);
+  };
   return (
     <CreateFundingRoot>
       <CreateFrame>
         <H>펀딩 생성하기</H>
         <FundingFrameParent>
           <FundingFrame>
-            <Parent1>
-              <Div>카테고리 선택</Div>
-              <KeyboardArrowDownIcon />
-            </Parent1>
+            <FormControl
+              variant="standard"
+              sx={{
+                m: 1,
+                minWidth: 120,
+                width: '15.5rem',
+                gap: '0rem 4.688rem',
+              }}
+            >
+              <InputLabel
+                id="demo-simple-select-standard-label"
+                sx={{
+                  fontSize: 'var(--font-size-5xl)',
+                  color: 'black',
+                  position: 'relative',
+                }}
+              >
+                카테고리 선택
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-standard-label"
+                id="demo-simple-select-standard"
+                value={age}
+                onChange={handleChange}
+                label="Age"
+                sx={{ fontSize: 'var(--font-size-5xl)' }}
+              >
+                <MenuItem value={10}>테크가전</MenuItem>
+                <MenuItem value={20}>패션</MenuItem>
+                <MenuItem value={30}>뷰티</MenuItem>
+                <MenuItem value={10}>푸드</MenuItem>
+                <MenuItem value={10}>도서</MenuItem>
+                <MenuItem value={10}>굿즈</MenuItem>
+                <MenuItem value={10}>잡화</MenuItem>
+              </Select>
+            </FormControl>
             <Frameset>
               <FrameComponent5 prop="시작" prop1="펀딩 시작일" />
               <FrameComponent5 prop="종료" prop1="펀딩 종료일" />
