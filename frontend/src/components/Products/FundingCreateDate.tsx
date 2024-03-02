@@ -1,10 +1,16 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import styled from 'styled-components';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs, { Dayjs } from 'dayjs';
+// import dayjs from 'dayjs';
 export type FrameComponent5Type = {
   prop?: string;
   prop1?: string;
+  handleStartDate?: any;
+  handleEndDate?: any;
 };
 
 const B = styled.b`
@@ -13,15 +19,8 @@ const B = styled.b`
     font-size: var(--font-size-3xl);
   }
 `;
-const Div = styled.div`
-  position: relative;
-  font-weight: 500;
-  @media screen and (max-width: 450px) {
-    font-size: var(--font-size-lgi);
-  }
-`;
 
-const DatePicker = styled.div`
+const DatePicker1 = styled.div`
   flex: 1;
   border-bottom: 1px solid var(--color-gray-100);
   box-sizing: border-box;
@@ -52,17 +51,42 @@ const ParentRoot = styled.div`
   }
 `;
 
-const FrameComponent5: FunctionComponent<FrameComponent5Type> = ({
-  prop,
-  prop1,
-}) => {
+const FrameComponent5: FunctionComponent<FrameComponent5Type> = (props) => {
+  const date = new Date();
+  const [value, setValue] = useState<Dayjs | null>(dayjs(date));
+  if (value) {
+    const formattedDate = value.format(`YYYY/MM/DD${props.prop}`);
+    console.log(formattedDate);
+    if (formattedDate.endsWith('료')) {
+      props.handleEndDate(formattedDate.slice(0, 10));
+    }
+    if (formattedDate.endsWith('작')) {
+      props.handleStartDate(formattedDate.slice(0, 10));
+    }
+  }
+
   return (
     <ParentRoot>
-      <B>{prop}</B>
-      <DatePicker>
-        <Div>{prop1}</Div>
-        <KeyboardArrowDownIcon />
-      </DatePicker>
+      <B>{props.prop}</B>
+      <DatePicker1>
+        <LocalizationProvider
+          dateAdapter={AdapterDayjs}
+          dateFormats={{ monthShort: 'M' }}
+        >
+          <DemoContainer components={['DatePicker']}>
+            <DatePicker
+              onChange={(newValue) => setValue(newValue)}
+              value={value}
+              label={props.prop1}
+              format={'YYYY-MM-DD'}
+              sx={{
+                fontSize: 'var(--font-size-5xl)',
+              }}
+              className={props.prop}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
+      </DatePicker1>
     </ParentRoot>
   );
 };

@@ -12,6 +12,7 @@ import { checkAuthLoader, getAuthToken } from './utils/tokenHandler';
 import ProductDetails from './pages/ProductDetails';
 import NotFound from './components/NotFound';
 import CreateFunding from './pages/CreateFunding';
+import ChangePassword from './components/Auth/ChangePassword';
 // import { categoryLoader, detailsLoader } from './utils/loaders';
 
 const router = createBrowserRouter([
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
       {
         path: 'search-password',
         element: <SearchPassword />,
+      },
+      {
+        path: 'change-password',
+        element: <ChangePassword />,
       },
     ],
   },

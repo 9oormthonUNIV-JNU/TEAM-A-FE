@@ -1,15 +1,11 @@
-import { FunctionComponent, useState } from 'react';
 import styled from 'styled-components';
 import FrameComponent5 from '../components/Products/FundingCreateDate';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { NavLink } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 
 const H = styled.h3`
   margin: 0;
@@ -28,31 +24,7 @@ const H = styled.h3`
     font-size: var(--font-size-3xl);
   }
 `;
-const Div = styled.div`
-  position: relative;
-  font-size: var(--font-size-5xl);
-  font-weight: 500;
-  font-family: var(--font-pretendard);
-  color: var(--color-black);
-  text-align: left;
-  @media screen and (max-width: 450px) {
-    font-size: var(--font-size-lgi);
-  }
-`;
 
-const Parent1 = styled.div`
-  width: 15.5rem;
-  border-bottom: 1px solid var(--color-gray-100);
-  box-sizing: border-box;
-  overflow: hidden;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: var(--padding-mini) var(--padding-8xs);
-  gap: 0rem 4.688rem;
-`;
 const Frameset = styled.div`
   width: 20.375rem;
   display: flex;
@@ -99,7 +71,7 @@ const Input = styled.input`
   font-family: var(--font-pretendard);
   font-size: var(--font-size-5xl);
   background-color: transparent;
-  height: 1.813rem;
+  height: 3rem;
   position: relative;
   color: var(--color-black);
   text-align: left;
@@ -126,7 +98,7 @@ const Input1 = styled.input`
   font-family: var(--font-pretendard);
   font-size: var(--font-size-5xl);
   background-color: transparent;
-  height: 1.813rem;
+  height: 3caprem;
   position: relative;
   color: var(--color-black);
   text-align: left;
@@ -141,7 +113,7 @@ const FrameParent = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 1.75rem 0rem;
+  gap: 2.75rem 0rem;
   min-width: 16.938rem;
   @media screen and (max-width: 750px) {
     flex: 1;
@@ -178,7 +150,7 @@ const Group = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 2.063rem 0rem;
+  gap: 4.063rem 0rem;
 `;
 const FundingFrameInner = styled.div`
   display: flex;
@@ -194,6 +166,7 @@ const FundingFrameInner = styled.div`
 `;
 const FundingFrame1 = styled.div`
   flex: 1;
+
   border-radius: var(--br-xl);
   background-color: var(--color-white);
   border: 1px solid var(--color-gray-100);
@@ -352,19 +325,7 @@ const TitleFrame = styled.section`
     gap: 2.438rem 0rem;
   }
 `;
-const CompletionFrame = styled.textarea`
-  border: 1px solid var(--color-gray-100);
-  background-color: var(--color-white);
-  height: 22.438rem;
-  width: auto;
-  outline: none;
-  align-self: stretch;
-  position: relative;
-  border-radius: var(--br-xl);
-  box-sizing: border-box;
-  overflow: hidden;
-  flex-shrink: 0;
-`;
+
 const ProductDetailsFrame = styled.section`
   width: 95rem;
   display: flex;
@@ -454,36 +415,46 @@ const CreateFundingRoot = styled.form`
     gap: 2.5rem 0rem;
   }
 `;
-// const Parent1 = styled.div`
-//   width: 15.5rem;
-//   border-bottom: 1px solid var(--color-gray-100);
-//   box-sizing: border-box;
-//   overflow: hidden;
-//   flex-shrink: 0;
-//   display: flex;
-//   flex-direction: row;
-//   align-items: flex-start;
-//   justify-content: flex-start;
-//   padding: var(--padding-mini) var(--padding-8xs);
-//   gap: 0rem 4.688rem;
-// `;
-// const Div = styled.div`
-//   position: relative;
-//   font-size: var(--font-size-5xl);
-//   font-weight: 500;
-//   font-family: var(--font-pretendard);
-//   color: var(--color-black);
-//   text-align: left;
-//   @media screen and (max-width: 450px) {
-//     font-size: var(--font-size-lgi);
-//   }
-// `;
-const CreateFunding: FunctionComponent = () => {
-  const [age, setAge] = useState('');
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value);
+interface IFunding {
+  category?: string;
+  goals: number;
+  participation: number;
+  title: string;
+  funding_summary: string;
+  funding_description: string;
+}
+
+const CreateFunding = () => {
+  const { register, handleSubmit, watch } = useForm<IFunding>();
+
+  const [start, setStart] = useState('');
+  const [end, setEnd] = useState('');
+  const handleStartDate = (data: string) => {
+    setStart(data);
   };
+  const handleEndDate = (data: string) => {
+    setEnd(data);
+  };
+  console.log(watch('goals'));
+
+  const handleFormSubmit = (data: IFunding) => {
+    console.log(1);
+
+    const formData = {
+      ...data,
+      start_date: start,
+      end_date: end,
+    };
+    console.log(formData);
+  };
+
+  const indivisual = Math.round(
+    Number(watch('goals')) / Number(watch('participation')),
+  );
+
+  //에러확인 handler
+  const onInvalid = (errors: any) => console.error(errors);
   return (
     <CreateFundingRoot>
       <CreateFrame>
@@ -512,38 +483,53 @@ const CreateFunding: FunctionComponent = () => {
               <Select
                 labelId="demo-simple-select-standard-label"
                 id="demo-simple-select-standard"
-                value={age}
-                onChange={handleChange}
-                label="Age"
+                label="category"
                 sx={{ fontSize: 'var(--font-size-5xl)' }}
+                {...register('category')}
               >
-                <MenuItem value={10}>테크가전</MenuItem>
-                <MenuItem value={20}>패션</MenuItem>
-                <MenuItem value={30}>뷰티</MenuItem>
-                <MenuItem value={10}>푸드</MenuItem>
-                <MenuItem value={10}>도서</MenuItem>
-                <MenuItem value={10}>굿즈</MenuItem>
-                <MenuItem value={10}>잡화</MenuItem>
+                <MenuItem value={'tech' || ''}>테크가전</MenuItem>
+                <MenuItem value={'fashion' || ''}>패션</MenuItem>
+                <MenuItem value={'beauty' || ''}>뷰티</MenuItem>
+                <MenuItem value={'food' || ''}>푸드</MenuItem>
+                <MenuItem value={'book' || ''}>도서</MenuItem>
+                <MenuItem value={'goods' || ''}>굿즈</MenuItem>
+                <MenuItem value={'stuff' || ''}>잡화</MenuItem>
               </Select>
             </FormControl>
             <Frameset>
-              <FrameComponent5 prop="시작" prop1="펀딩 시작일" />
-              <FrameComponent5 prop="종료" prop1="펀딩 종료일" />
+              <FrameComponent5
+                prop="시작"
+                prop1="펀딩 시작일"
+                handleStartDate={handleStartDate}
+              />
+              <FrameComponent5
+                prop="종료"
+                prop1="펀딩 종료일"
+                handleEndDate={handleEndDate}
+              />
             </Frameset>
           </FundingFrame>
           <FundingFrame1>
             <FrameParent>
               <Wrapper>
-                <Input placeholder="총 목표금액 입력" type="text" />
+                <Input
+                  placeholder="총 목표금액 입력"
+                  type="number"
+                  {...register('goals', { required: true })}
+                />
               </Wrapper>
               <Wrapper>
-                <Input1 placeholder="펀딩 참여 인원 입력" type="text" />
+                <Input1
+                  placeholder="펀딩 참여 인원 입력"
+                  type="number"
+                  {...register('participation', { required: true })}
+                />
               </Wrapper>
             </FrameParent>
             <FundingFrameInner>
               <Group>
                 <B>인당 책정된 가격</B>
-                <B1>33,000원</B1>
+                <B1>{indivisual || '계산불가'}원</B1>
               </Group>
             </FundingFrameInner>
           </FundingFrame1>
@@ -552,7 +538,11 @@ const CreateFunding: FunctionComponent = () => {
       <TitleFrame>
         <SubtitleFrame>
           <InputTitleFrame>
-            <Input2 placeholder="제목을 입력해주세요" type="text" />
+            <Input2
+              placeholder="제목을 입력해주세요"
+              type="text"
+              {...register('title', { required: true })}
+            />
           </InputTitleFrame>
           <ImageUploadFrame
             style={{
@@ -571,18 +561,39 @@ const CreateFunding: FunctionComponent = () => {
             placeholder="제품 페이지 상단에 보여질 제품 설명을 작성해 주세요."
             rows={12}
             cols={76}
+            {...register('funding_summary', { required: true })}
           />
         </EndFrame>
       </TitleFrame>
       <ProductDetailsFrame>
         <B>상품 상세 설명</B>
-        <CompletionFrame rows={18} cols={76} />
+        {/* <CompletionFrame rows={18} cols={76} /> */}
+        <ContentFrameB
+          style={{ height: '22rem' }}
+          placeholder="제품 상세 설명을 작성해 주세요."
+          rows={12}
+          cols={76}
+          {...register('funding_description', { required: true })}
+        />
       </ProductDetailsFrame>
       <CancelCompleteFrame>
         <FrameWithCancelComplete>
-          <B>취소</B>
+          <NavLink
+            to={'/'}
+            style={{
+              textDecoration: 'none',
+              color: 'black',
+              height: '100%',
+              width: '100%',
+            }}
+          >
+            <B>취소</B>
+          </NavLink>
         </FrameWithCancelComplete>
-        <FrameWithCancelComplete1>
+
+        <FrameWithCancelComplete1
+          onClick={handleSubmit(handleFormSubmit, onInvalid)}
+        >
           <B2>작성완료</B2>
         </FrameWithCancelComplete1>
       </CancelCompleteFrame>
