@@ -130,7 +130,12 @@ const FundingFrame = () => {
 
         {token ? (
           <AvatarWrapper>
-            <CreateFundingsButton>펀딩 생성하기</CreateFundingsButton>
+            <NavLink
+              to={'/create-funding'}
+              style={{ textDecoration: 'none', color: 'black' }}
+            >
+              <CreateFundingsButton>펀딩 생성하기</CreateFundingsButton>
+            </NavLink>
             <UserIcon />
           </AvatarWrapper>
         ) : (

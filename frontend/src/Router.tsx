@@ -8,7 +8,11 @@ import SignupComplete from './components/Auth/SignupComplete';
 import SearchPassword from './components/Auth/SearchPassword';
 import CategoryProducts from './pages/CategoryProducts';
 import { logoutAction } from './utils/actions';
-import { getAuthToken } from './utils/tokenHandler';
+import { checkAuthLoader, getAuthToken } from './utils/tokenHandler';
+import ProductDetails from './pages/ProductDetails';
+import NotFound from './components/NotFound';
+import CreateFunding from './pages/CreateFunding';
+// import { categoryLoader, detailsLoader } from './utils/loaders';
 
 const router = createBrowserRouter([
   {
@@ -16,6 +20,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     id: 'root',
     loader: getAuthToken,
+    errorElement: <NotFound />,
     children: [
       {
         path: '',
@@ -24,6 +29,17 @@ const router = createBrowserRouter([
       {
         path: '/category/:categoryId',
         element: <CategoryProducts />,
+        // loader: categoryLoader,
+      },
+      {
+        path: '/products/:productId',
+        element: <ProductDetails />,
+        // loader: detailsLoader,
+      },
+      {
+        path: '/create-funding',
+        element: <CreateFunding />,
+        loader: checkAuthLoader,
       },
     ],
   },
