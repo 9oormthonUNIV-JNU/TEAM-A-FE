@@ -95,7 +95,7 @@ export default function SearchPassword() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
-  const [error, setError] = useState('');
+  const [error] = useState('');
   const emailConfirmHandler = () => {
     try {
       const result = postEmailConfirm(email);
@@ -112,10 +112,10 @@ export default function SearchPassword() {
     try {
       const result = postCodeConfirm({ email, code });
       console.log(result);
-      if (result.status === 200) {
-        //state를 백에서 받은 이메일로 변경
-        navigate('/auth/change-password', { state: 1 });
-      }
+      // if (result === 200) {
+      //   //state를 백에서 받은 이메일로 변경
+      //   navigate('/auth/change-password', { state: 1 });
+      // }
     } catch (error) {
       console.log(error);
     }

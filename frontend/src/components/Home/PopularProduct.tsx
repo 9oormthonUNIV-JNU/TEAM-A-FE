@@ -1,5 +1,7 @@
 import { styled } from 'styled-components';
 import PopularBox from './PopularBox';
+import { useEffect } from 'react';
+import { popularProduct } from '../../utils/api/MainPage/product';
 
 const FeaturedFundingAreaParent = styled.section`
   max-width: 1920px;
@@ -70,6 +72,17 @@ const H = styled.h1`
 `;
 
 export default function PopularProduct() {
+  const callPopular = async () => {
+    try {
+      const result = await popularProduct();
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    callPopular();
+  }, []);
   return (
     <FeaturedFundingAreaParent>
       <FeaturedFundingArea>

@@ -1,6 +1,8 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import testImg from '../../assets/images/kakao.png';
+import { urgentProduct } from '../../utils/api/MainPage/product';
+import { changeResult, changeSeconds } from '../../utils/timeHandler';
 
 const H = styled.h1`
   margin: 0;
@@ -184,6 +186,35 @@ const WholeWrapper = styled.div`
 `;
 
 const UrgentProducts: FunctionComponent = () => {
+  const callUrgentProducts = async () => {
+    const result = await urgentProduct();
+    console.log(result);
+  };
+
+  const a = '50:00:05';
+  const b = '22:33:11';
+  const c = '44:55:22';
+
+  const [time, setTime] = useState(changeSeconds(a));
+  const [time2, setTime2] = useState(changeSeconds(b));
+  const [time3, setTime3] = useState(changeSeconds(c));
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime((prev) => prev - 1);
+      setTime2((prev) => prev - 1);
+      setTime3((prev) => prev - 1);
+    }, 1000);
+
+    if (time < 0) {
+      alert('Time OVER!');
+    }
+    return () => clearInterval(timer);
+  }, [time, time2]);
+
+  useEffect(() => {
+    callUrgentProducts();
+  }, []);
   return (
     <WholeWrapper>
       <PopularProductsFrameRoot>
@@ -204,18 +235,18 @@ const UrgentProducts: FunctionComponent = () => {
             <FrameWithEllipseChildren2>
               <FrameWithEllipseChildren src={testImg} />
               <FrameWithEllipseChildren1>
-                <EmptyFrame>23:59:99</EmptyFrame>
+                <EmptyFrame>{changeResult(time)}</EmptyFrame>
               </FrameWithEllipseChildren1>
             </FrameWithEllipseChildren2>
             <FrameWithEllipseChildren2>
               <FrameWithEllipseChildren src={testImg} />
               <Wrapper>
-                <EmptyFrame>71:23:22</EmptyFrame>
+                <EmptyFrame>{changeResult(time2)}</EmptyFrame>
               </Wrapper>
             </FrameWithEllipseChildren2>
             <SearchIconAndXmark>
               <FrameWithEllipseChildren src={testImg} />
-              <EmptyFrame>23:59:99</EmptyFrame>
+              <EmptyFrame>{changeResult(time3)}</EmptyFrame>
             </SearchIconAndXmark>
           </SeparatingEllipses>
         </EllipseSeparator>
