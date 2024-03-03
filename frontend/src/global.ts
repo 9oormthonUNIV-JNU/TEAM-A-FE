@@ -103,6 +103,7 @@ export default createGlobalStyle`
 --padding-4xs: 0.563rem;
 --padding-23xl: 2.625rem;
 --padding-27xl: 2.875rem;
+--padding-29xl: 3rem;
 --padding-24xl: 2.688rem;
 --padding-33xl: 3.25rem;
 --padding-46xl: 4.063rem;

@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import FrameComponent5 from '../components/Products/FundingCreateDate';
 
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
+import PostImage from '../components/Products/PostImage';
 
 const H = styled.h3`
   margin: 0;
@@ -249,33 +249,7 @@ const InputTitleFrame = styled.div`
   justify-content: flex-start;
   padding: 1.938rem var(--padding-13xl);
 `;
-const Div1 = styled.div`
-  position: relative;
-  font-size: var(--font-size-5xl);
-  font-weight: 500;
-  font-family: var(--font-pretendard);
-  color: var(--color-black);
-  text-align: left;
-`;
-const ImageUploadFrame = styled.button`
-  cursor: pointer;
-  border: 1px solid var(--color-black);
-  padding: var(--padding-lg) 2.313rem;
-  background-color: transparent;
-  border-radius: var(--br-xl);
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  justify-content: flex-start;
-  gap: 0rem 0.75rem;
-  white-space: nowrap;
-  &:hover {
-    background-color: rgba(51, 51, 51, 0.09);
-    border: 1px solid #333;
-    box-sizing: border-box;
-  }
-`;
+
 const SubtitleFrame = styled.div`
   align-self: stretch;
   display: flex;
@@ -436,7 +410,6 @@ const CreateFunding = () => {
   const handleEndDate = (data: string) => {
     setEnd(data);
   };
-  console.log(watch('goals'));
 
   const handleFormSubmit = (data: IFunding) => {
     console.log(1);
@@ -539,12 +512,12 @@ const CreateFunding = () => {
         <SubtitleFrame>
           <InputTitleFrame>
             <Input2
-              placeholder="제목을 입력해주세요"
+              placeholder="제목을 입력해주세요 20자 미만"
               type="text"
               {...register('title', { required: true })}
             />
           </InputTitleFrame>
-          <ImageUploadFrame
+          {/* <ImageUploadFrame
             style={{
               display: 'flex',
               justifyContent: 'center',
@@ -553,7 +526,8 @@ const CreateFunding = () => {
           >
             <CameraAltIcon fontSize="large" />
             <Div1>이미지 첨부하기</Div1>
-          </ImageUploadFrame>
+          </ImageUploadFrame> */}
+          <PostImage />
         </SubtitleFrame>
         <EndFrame>
           <B>간단한 상품 설명</B>
