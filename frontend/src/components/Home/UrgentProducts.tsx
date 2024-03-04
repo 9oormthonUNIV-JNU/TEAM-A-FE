@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import testImg from '../../assets/images/kakao.png';
 import { urgentProduct } from '../../utils/api/MainPage/product';
 import { changeResult, changeSeconds } from '../../utils/timeHandler';
+import { useQuery } from '@tanstack/react-query';
 
 const H = styled.h1`
   margin: 0;
@@ -186,15 +187,15 @@ const WholeWrapper = styled.div`
 `;
 
 const UrgentProducts: FunctionComponent = () => {
-  const callUrgentProducts = async () => {
-    const result = await urgentProduct();
-    console.log(result);
-  };
-
   const a = '50:00:05';
   const b = '22:33:11';
   const c = '44:55:22';
 
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['urgentProducts'],
+    queryFn: urgentProduct,
+    enabled: true,
+  });
   const [time, setTime] = useState(changeSeconds(a));
   const [time2, setTime2] = useState(changeSeconds(b));
   const [time3, setTime3] = useState(changeSeconds(c));
@@ -210,11 +211,16 @@ const UrgentProducts: FunctionComponent = () => {
       alert('Time OVER!');
     }
     return () => clearInterval(timer);
-  }, [time, time2]);
+  }, [time, time2, data]);
+  if (data === undefined) return;
+  const product1 = data.data.response[0];
+  const product2 = data.data.response[1];
+  const product3 = data.data.response[2];
+  console.log(product1.fundingImage);
 
-  useEffect(() => {
-    callUrgentProducts();
-  }, []);
+  if (isLoading) return <div>loading..</div>;
+  if (isError) return <div>errorrrrrr</div>;
+
   return (
     <WholeWrapper>
       <PopularProductsFrameRoot>
@@ -233,19 +239,19 @@ const UrgentProducts: FunctionComponent = () => {
           </RecentSearchesFrame1>
           <SeparatingEllipses>
             <FrameWithEllipseChildren2>
-              <FrameWithEllipseChildren src={testImg} />
+              <FrameWithEllipseChildren src={product1.fundingImage} />
               <FrameWithEllipseChildren1>
                 <EmptyFrame>{changeResult(time)}</EmptyFrame>
               </FrameWithEllipseChildren1>
             </FrameWithEllipseChildren2>
             <FrameWithEllipseChildren2>
-              <FrameWithEllipseChildren src={testImg} />
+              <FrameWithEllipseChildren src={product2.fundingImage} />
               <Wrapper>
                 <EmptyFrame>{changeResult(time2)}</EmptyFrame>
               </Wrapper>
             </FrameWithEllipseChildren2>
             <SearchIconAndXmark>
-              <FrameWithEllipseChildren src={testImg} />
+              <FrameWithEllipseChildren src={product3.fundingImage} />
               <EmptyFrame>{changeResult(time3)}</EmptyFrame>
             </SearchIconAndXmark>
           </SeparatingEllipses>

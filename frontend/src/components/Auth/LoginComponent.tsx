@@ -213,6 +213,7 @@ const LoginComponent: FunctionComponent = () => {
             {errors.email ? errors.email.message : errors.password?.message}
           </ErrorSpan>
         )}
+
         <LoginButton
           onClick={handleSubmit(onValid)}
           disableElevation={true}

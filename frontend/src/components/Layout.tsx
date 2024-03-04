@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from 'react';
 import RecentSearch from './RecentSearch';
 import { searchState } from '../atoms';
 import { useSetRecoilState } from 'recoil';
-import { getProduct } from '../utils/api/Products/product';
+// import { getProduct } from '../utils/api/Products/product';
 import { getTokenDuration } from '../utils/tokenHandler';
 
 // import axios from 'axios';
@@ -57,8 +57,8 @@ const FundingFrame = () => {
   const handleNavigateCategory = async (e: React.MouseEvent) => {
     const categoryId = e.target.id;
     try {
-      const result = await getProduct({ categoryId });
-      console.log(result);
+      // const result = await getProduct({ categoryId });
+      // console.log(result);
       // navigate(`/category/${categoryId}`, { state: { result } });
       navigate(`/category/${categoryId}`);
     } catch (error) {
@@ -92,6 +92,7 @@ const FundingFrame = () => {
     //유저가 있다면 들어가게 설정
     setSearchHistory((prevHistory) => [...prevHistory, value]);
     try {
+      console.log(value);
       const result = await searchProduct(value);
       console.log(result);
     } catch (error) {
@@ -148,28 +149,28 @@ const FundingFrame = () => {
         )}
       </LogoText>
       <NavBar>
-        <B id="whole" onClick={(e) => handleNavigateCategory(e)}>
+        <B id="전체" onClick={(e) => handleNavigateCategory(e)}>
           전체
         </B>
-        <B id="tech" onClick={(e) => handleNavigateCategory(e)}>
+        <B id="테크가전" onClick={(e) => handleNavigateCategory(e)}>
           테크가전
         </B>
-        <B id="fashion" onClick={(e) => handleNavigateCategory(e)}>
+        <B id="패션" onClick={(e) => handleNavigateCategory(e)}>
           패션
         </B>
-        <B id="beauty" onClick={(e) => handleNavigateCategory(e)}>
+        <B id="뷰티" onClick={(e) => handleNavigateCategory(e)}>
           뷰티
         </B>
-        <B id="food" onClick={(e) => handleNavigateCategory(e)}>
+        <B id="푸드" onClick={(e) => handleNavigateCategory(e)}>
           푸드
         </B>
-        <B id="book" onClick={(e) => handleNavigateCategory(e)}>
+        <B id="도서" onClick={(e) => handleNavigateCategory(e)}>
           도서
         </B>
-        <B id="goods" onClick={(e) => handleNavigateCategory(e)}>
+        <B id="굿즈" onClick={(e) => handleNavigateCategory(e)}>
           굿즈
         </B>
-        <B id="stuff" onClick={(e) => handleNavigateCategory(e)}>
+        <B id="잡화" onClick={(e) => handleNavigateCategory(e)}>
           잡화
         </B>
       </NavBar>

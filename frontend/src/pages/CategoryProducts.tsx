@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import CategoryFrame from '../components/Products/CategoryFrame';
 import CategoryBox from '../components/Products/CategoryBox';
@@ -64,33 +64,44 @@ const SearchRoot = styled.div`
   }
 `;
 
-const CategoryProducts: FunctionComponent = () => {
+const CategoryProducts = () => {
   const { categoryId } = useParams();
   const [currentPage, setCurrentPage] = useState(1);
   const queryClient = useQueryClient();
   //데이터 분류별 인기순/최신순/마감임박순
   const [sorted, setSorted] = useState('');
+
   const changeSort = (data: any) => {
     setSorted(data);
-    console.log(data);
   };
-  //location 으로 데이터 받기
-  //   const location = useLocation();
-  //   const info = { ...location.state };
-  // const { data, isLoading, isError, error } = useQuery({
-  //   queryKey: ['product'],
-  //   queryFn: () => getProduct({ categoryId }),
-  // });
+  console.log(sorted);
+  // location 으로 데이터 받기
+  // const location = useLocation();
+  // const info = { ...location.state };
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['products'],
+    queryFn: () => getProduct({ categoryId }),
+  });
+  console.log(data);
 
-  // if (isLoading) {
-  //   return <h1>loading..</h1>;
-  // }
-  // if (isError) {
-  //   console.log(error);
-  //   return <h1>error</h1>;
-  // }
+  useEffect(() => {
+    if (currentPage < 10) {
+      const page = currentPage + 1;
+      queryClient.prefetchQuery({
+        queryKey: ['products', page],
+        queryFn: () => getProduct({ page }),
+      });
+    }
+  }, [currentPage, queryClient]);
+
+  if (isLoading) {
+    return <h1>loading..</h1>;
+  }
+  if (isError) {
+    console.log(error);
+    return <h1>error</h1>;
+  }
   const handlePage = (e: any) => {
-    console.log(e.target.outerText);
     setCurrentPage(parseInt(e.target.outerText));
   };
   return (
