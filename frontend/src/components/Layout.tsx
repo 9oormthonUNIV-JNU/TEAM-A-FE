@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from 'react';
 import RecentSearch from './RecentSearch';
 import { searchState } from '../atoms';
 import { useSetRecoilState } from 'recoil';
-import { categoryProduct } from '../utils/api/Products/category';
+import { getProduct } from '../utils/api/Products/product';
 import { getTokenDuration } from '../utils/tokenHandler';
 
 // import axios from 'axios';
@@ -54,10 +54,10 @@ const FundingFrame = () => {
       }
   };
 
-  const handleNavigateCategory = (e: React.MouseEvent) => {
+  const handleNavigateCategory = async (e: React.MouseEvent) => {
     const categoryId = e.target.id;
     try {
-      const result = categoryProduct(categoryId);
+      const result = await getProduct({ categoryId });
       console.log(result);
       // navigate(`/category/${categoryId}`, { state: { result } });
       navigate(`/category/${categoryId}`);

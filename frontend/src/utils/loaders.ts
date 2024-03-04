@@ -1,4 +1,4 @@
-import { categoryProduct, detailProduct } from './api/Products/category';
+import { categoryProduct, detailProduct } from './api/Products/product';
 
 export async function categoryLoader({ params }: any) {
   const contact = await categoryProduct(params);
@@ -12,6 +12,7 @@ export async function categoryLoader({ params }: any) {
 }
 
 export async function detailsLoader({ params }: any) {
+  console.log(params);
   const contact = await detailProduct(params);
   if (!contact) {
     throw new Response('', {

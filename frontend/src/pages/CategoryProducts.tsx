@@ -1,8 +1,11 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import styled from 'styled-components';
 import CategoryFrame from '../components/Products/CategoryFrame';
 import CategoryBox from '../components/Products/CategoryBox';
 import { useParams } from 'react-router-dom';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { getProduct } from '../utils/api/Products/product';
+import { Pagination } from '@mui/material';
 
 const B = styled.b`
   position: relative;
@@ -63,16 +66,39 @@ const SearchRoot = styled.div`
 
 const CategoryProducts: FunctionComponent = () => {
   const { categoryId } = useParams();
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const queryClient = useQueryClient();
+  //데이터 분류별 인기순/최신순/마감임박순
+  const [sorted, setSorted] = useState('');
+  const changeSort = (data: any) => {
+    setSorted(data);
+    console.log(data);
+  };
   //location 으로 데이터 받기
   //   const location = useLocation();
   //   const info = { ...location.state };
+  // const { data, isLoading, isError, error } = useQuery({
+  //   queryKey: ['product'],
+  //   queryFn: () => getProduct({ categoryId }),
+  // });
+
+  // if (isLoading) {
+  //   return <h1>loading..</h1>;
+  // }
+  // if (isError) {
+  //   console.log(error);
+  //   return <h1>error</h1>;
+  // }
+  const handlePage = (e: any) => {
+    console.log(e.target.outerText);
+    setCurrentPage(parseInt(e.target.outerText));
+  };
   return (
     <SearchRoot>
       <SearchFrame>
         <B>{categoryId}</B>
       </SearchFrame>
-      <CategoryFrame />
+      <CategoryFrame changeSort={changeSort} />
       <CategoryboxFrame>
         <CategoryBox />
         <CategoryBox
@@ -102,6 +128,16 @@ const CategoryProducts: FunctionComponent = () => {
         <CategoryBox propPadding="unset" propGap="0rem 0.5rem" />
         <CategoryBox propPadding="unset" propGap="0rem 0.5rem" />
       </CategoryboxFrame>
+      <Pagination
+        count={10}
+        siblingCount={10}
+        shape="rounded"
+        style={{ margin: '0 auto' }}
+        page={currentPage}
+        onChange={handlePage}
+        size="large"
+        defaultPage={1}
+      />
     </SearchRoot>
   );
 };

@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
-const FundingBoxChild = styled.textarea`
+const FundingBoxChild = styled.img`
   border: none;
   background-color: var(--color-gainsboro);
   height: 17.25rem;
@@ -100,7 +100,7 @@ const FundingBoxRoot = styled.div`
 const PopularBox: FunctionComponent = () => {
   return (
     <FundingBoxRoot>
-      <FundingBoxChild rows={14} cols={23} />
+      <FundingBoxChild />
       <ProductNameEllipse>
         <CompanyLogoFrame>
           <Div>테크 가전 {'>'}</Div>

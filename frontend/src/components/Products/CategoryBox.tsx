@@ -34,6 +34,7 @@ const B = styled.b`
 `;
 const Wrapper = styled.div`
   display: flex;
+
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
@@ -87,7 +88,7 @@ const CategoryBoxInner = styled.div`
   justify-content: flex-start;
 `;
 const CategoryBoxRoot = styled.div`
-  height: 24.25rem;
+  height: 25.25rem;
   width: 22.625rem;
   background-color: var(--color-white);
   overflow: hidden;
@@ -119,6 +120,7 @@ const CategoryBox: FunctionComponent<CategoryBoxType> = ({
           <Wrapper>
             <B>35,000원</B>
           </Wrapper>
+          <B>20%</B>
           <Group propPadding={propPadding}>
             <Div1>회사 이름</Div1>
             <VectorParent propGap={propGap}>

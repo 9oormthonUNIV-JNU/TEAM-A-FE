@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import styled from 'styled-components';
 
 const PriceRangeFrameChild = styled.div`
@@ -147,12 +147,35 @@ const FRAMERoot = styled.div`
   font-family: var(--font-pretendard);
 `;
 
-const CategoryFrame: FunctionComponent = () => {
+const CategoryFrame: FunctionComponent = ({ changeSort }) => {
+  const [state, setState] = useState('');
+  const changeHandler = (e: any) => {
+    setState(e.target.id);
+    changeSort(state);
+  };
   return (
     <FRAMERoot>
       <PriceRangeFrame>
         <PriceRangeFrameChild />
-        <Div>{`인기순   |   최신순   |   마감 임박순  `}</Div>
+
+        <div
+          style={{
+            width: '20%',
+            display: 'flex',
+            justifyContent: 'space-evenly',
+          }}
+        >
+          <Div id="인기순" onClick={changeHandler}>
+            인기순
+          </Div>
+          <Div id="최신순" onClick={changeHandler}>
+            최신순
+          </Div>
+          <Div id="마감임박순" onClick={changeHandler}>
+            마감임박순
+          </Div>
+        </div>
+
         <FrameORIGINAL>
           <FramePRICEFILTER>
             <B>가격 필터</B>
