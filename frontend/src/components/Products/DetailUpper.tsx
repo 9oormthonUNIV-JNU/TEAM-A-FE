@@ -355,7 +355,7 @@ const DetailUpper: FunctionComponent = () => {
             </Iconoirnavarrowright>
             <FrameG>
               <FrameH>
-                <Div>{data?.data.response.state}</Div>
+                <Div>{data?.data.response.fundingStateDescription}</Div>
               </FrameH>
               <H>{data?.data.response.fundingTitle}</H>
             </FrameG>

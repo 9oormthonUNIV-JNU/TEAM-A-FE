@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import FrameComponent5 from '../components/Products/FundingCreateDate';
 
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import PostImage from '../components/Products/PostImage';
@@ -408,8 +408,12 @@ const CreateFunding = () => {
   };
   const { register, handleSubmit, watch } = useForm<IFunding>();
 
+  const navigate = useNavigate();
+
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
+
+  const [images, setImages] = useState([]);
   const handleStartDate = (data: string) => {
     setStart(data);
   };
@@ -417,9 +421,11 @@ const CreateFunding = () => {
     setEnd(data);
   };
 
-  const handleFormSubmit = async (data: IFunding) => {
-    console.log(1);
+  const getImages = (data: any) => {
+    setImages(data?.data.response);
+  };
 
+  const handleFormSubmit = async (data: IFunding) => {
     const formData = {
       fundingDescription: data.funding_description,
       fundingSummary: data.funding_summary,
@@ -427,15 +433,15 @@ const CreateFunding = () => {
       category: data.category,
       startDate: start,
       endDate: end,
+      imageUrls: images,
     };
     try {
       const result = await postProduct(formData, headers);
       console.log(result);
+      navigate(`/products/${result.data.response}`);
     } catch (error) {
       console.log(error);
     }
-
-    console.log(formData);
   };
 
   const indivisual = Math.round(
@@ -543,7 +549,7 @@ const CreateFunding = () => {
             <CameraAltIcon fontSize="large" />
             <Div1>이미지 첨부하기</Div1>
           </ImageUploadFrame> */}
-          <PostImage />
+          <PostImage getImages={getImages} />
         </SubtitleFrame>
         <EndFrame>
           <B>간단한 상품 설명</B>

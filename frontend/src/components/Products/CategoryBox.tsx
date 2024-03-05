@@ -1,6 +1,5 @@
 import { FunctionComponent, type CSSProperties } from 'react';
 import styled from 'styled-components';
-import schoolImg from '../../assets/images/naver.png';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 // import FavoriteIcon from '@mui/icons-material/Favorite';
 
@@ -110,22 +109,23 @@ const CategoryBoxRoot = styled.div`
 const CategoryBox: FunctionComponent<CategoryBoxType> = ({
   propPadding,
   propGap,
+  item,
 }) => {
   return (
     <CategoryBoxRoot>
-      <CategoryBoxChild loading="lazy" alt="" src={schoolImg} />
+      <CategoryBoxChild loading="lazy" alt="" src={item?.fundingImage} />
       <CategoryBoxInner>
         <Parent1>
-          <Div>펀딩상품 이름</Div>
+          <Div>{item?.fundingTitle}</Div>
           <Wrapper>
-            <B>35,000원</B>
+            <B>{`${item?.individualPrice}원`}</B>
           </Wrapper>
-          <B>20%</B>
+          <B>{`${item?.fundingPercent}%`}</B>
           <Group propPadding={propPadding}>
-            <Div1>회사 이름</Div1>
+            <Div1>{item?.nickname}</Div1>
             <VectorParent propGap={propGap}>
               <FavoriteBorderIcon sx={{ cursor: 'pointer' }} />
-              <ButtonFrame>2,030</ButtonFrame>
+              <ButtonFrame>{item?.likes}</ButtonFrame>
             </VectorParent>
           </Group>
         </Parent1>

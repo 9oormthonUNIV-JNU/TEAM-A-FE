@@ -78,9 +78,10 @@ const CategoryProducts = () => {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['products'],
-    queryFn: () => getProduct({ categoryId }),
+    queryFn: async () => {
+      return await getProduct({ categoryId });
+    },
   });
-  console.log(data);
 
   useEffect(() => {
     if (currentPage < 10) {
@@ -109,7 +110,9 @@ const CategoryProducts = () => {
       </SearchFrame>
       <CategoryFrame changeSort={changeSort} />
       <CategoryboxFrame>
-        <CategoryBox />
+        {data?.data.response.map((item: any) => {
+          return <CategoryBox {...item} />;
+        })}
         {/* <CategoryBox
           propPadding="0rem var(--padding-12xs) 0rem 0rem"
           propGap="0rem 0.563rem"

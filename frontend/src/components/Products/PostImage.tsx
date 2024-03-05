@@ -7,10 +7,8 @@ import { postImage } from '../../utils/api/Products/product';
 import AddIcon from '@mui/icons-material/Add';
 import { IconButton } from '@mui/material';
 
-export default function PostImage() {
+export default function PostImage({ getImages }: any) {
   const [open, setOpen] = useState(false);
-
-  // const [images, setImages] = useState([]);
 
   const handleClickOpen = (e: any) => {
     e.preventDefault();
@@ -23,28 +21,28 @@ export default function PostImage() {
 
   const hanldeImageSubmit = async () => {
     try {
-      const formData = new FormData();
-      for (let i = 0; i < detailImgs.length; i++) {
-        formData.append('images', detailImgs[i]);
-      }
-
-      const result = await postImage(formData);
-
-      console.log(result);
+      setOpen(false);
     } catch (error) {
       console.log(error);
     }
   };
 
-  //
-  const [detailImgs, setDetailImgs] = useState([]);
+  const [detailImgs, setDetailImgs] = useState<any>([]);
 
-  const handlePostImage = (e: any) => {
+  const handlePostImage = async (e: any) => {
     const fileArr = e.target.files;
 
     const formData = new FormData();
     for (let i = 0; i < fileArr.length; i++) {
       formData.append('images', fileArr[i]);
+    }
+
+    try {
+      const result = await postImage(formData);
+      getImages(result);
+      console.log(result);
+    } catch (error) {
+      console.log(error);
     }
 
     const fileURLs: any = [];
@@ -55,7 +53,6 @@ export default function PostImage() {
       const reader = new FileReader();
       reader.onload = () => {
         fileURLs[i] = reader.result;
-
         setDetailImgs([...fileURLs]);
       };
       reader.readAsDataURL(file);
