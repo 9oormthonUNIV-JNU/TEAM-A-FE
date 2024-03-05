@@ -6,6 +6,8 @@ import { NavLink } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import PostImage from '../components/Products/PostImage';
+import { getAuthToken } from '../utils/tokenHandler';
+import { postProduct } from '../utils/api/Products/product';
 
 const H = styled.h3`
   margin: 0;
@@ -400,6 +402,10 @@ interface IFunding {
 }
 
 const CreateFunding = () => {
+  const token = getAuthToken();
+  const headers = {
+    Authorization: token,
+  };
   const { register, handleSubmit, watch } = useForm<IFunding>();
 
   const [start, setStart] = useState('');
@@ -411,7 +417,7 @@ const CreateFunding = () => {
     setEnd(data);
   };
 
-  const handleFormSubmit = (data: IFunding) => {
+  const handleFormSubmit = async (data: IFunding) => {
     console.log(1);
 
     const formData = {
@@ -419,6 +425,13 @@ const CreateFunding = () => {
       start_date: start,
       end_date: end,
     };
+    try {
+      const result = await postProduct(formData, headers);
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+
     console.log(formData);
   };
 
@@ -541,7 +554,7 @@ const CreateFunding = () => {
       </TitleFrame>
       <ProductDetailsFrame>
         <B>상품 상세 설명</B>
-        {/* <CompletionFrame rows={18} cols={76} /> */}
+
         <ContentFrameB
           style={{ height: '22rem' }}
           placeholder="제품 상세 설명을 작성해 주세요."

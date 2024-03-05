@@ -15,7 +15,13 @@ export async function getProduct({
   return result;
 }
 
-export async function detailProduct({ productId }: any) {
-  const result = await api.get(`/fundings/${productId}`);
+export async function detailProduct(fundingId: any) {
+  console.log(fundingId);
+  const result = await api.get(`/fundings/${fundingId}`);
+  return result;
+}
+
+export async function postProduct(data: any, headers: any) {
+  const result = await api.post('/fundings', data, { headers });
   return result;
 }
