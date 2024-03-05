@@ -393,7 +393,7 @@ const CreateFundingRoot = styled.form`
 `;
 
 interface IFunding {
-  category?: string;
+  category: string;
   goals: number;
   participation: number;
   title: string;
@@ -421,9 +421,12 @@ const CreateFunding = () => {
     console.log(1);
 
     const formData = {
-      ...data,
-      start_date: start,
-      end_date: end,
+      fundingDescription: data.funding_description,
+      fundingSummary: data.funding_summary,
+      fundingTitle: data.title,
+      category: data.category,
+      startDate: start,
+      endDate: end,
     };
     try {
       const result = await postProduct(formData, headers);

@@ -75,9 +75,7 @@ const CategoryProducts = () => {
     setSorted(data);
   };
   console.log(sorted);
-  // location 으로 데이터 받기
-  // const location = useLocation();
-  // const info = { ...location.state };
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['products'],
     queryFn: () => getProduct({ categoryId }),
@@ -112,7 +110,7 @@ const CategoryProducts = () => {
       <CategoryFrame changeSort={changeSort} />
       <CategoryboxFrame>
         <CategoryBox />
-        <CategoryBox
+        {/* <CategoryBox
           propPadding="0rem var(--padding-12xs) 0rem 0rem"
           propGap="0rem 0.563rem"
         />
@@ -137,7 +135,7 @@ const CategoryProducts = () => {
           propGap="0rem 0.563rem"
         />
         <CategoryBox propPadding="unset" propGap="0rem 0.5rem" />
-        <CategoryBox propPadding="unset" propGap="0rem 0.5rem" />
+        <CategoryBox propPadding="unset" propGap="0rem 0.5rem" /> */}
       </CategoryboxFrame>
       <Pagination
         count={10}

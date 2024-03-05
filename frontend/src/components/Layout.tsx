@@ -90,11 +90,17 @@ const FundingFrame = () => {
     e.preventDefault();
     const value = e.target[0].value;
     //유저가 있다면 들어가게 설정
-    setSearchHistory((prevHistory) => [...prevHistory, value]);
+    if (token) {
+      setSearchHistory((prevHistory) => [...prevHistory, value]);
+    }
+
     try {
       console.log(value);
       const result = await searchProduct(value);
       console.log(result);
+      if (result.status === 200) {
+        navigate(`/products/${value}`);
+      }
     } catch (error) {
       console.log(error);
     }
