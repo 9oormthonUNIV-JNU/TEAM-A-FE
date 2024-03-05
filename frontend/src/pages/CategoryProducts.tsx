@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import CategoryFrame from '../components/Products/CategoryFrame';
-import CategoryBox from '../components/Products/CategoryBox';
 import { useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getProduct } from '../utils/api/Products/product';
 import { Pagination } from '@mui/material';
+
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 const B = styled.b`
   position: relative;
@@ -70,17 +71,14 @@ const CategoryProducts = () => {
   const queryClient = useQueryClient();
   //데이터 분류별 인기순/최신순/마감임박순
   const [sorted, setSorted] = useState('');
-
+  console.log(sorted);
   const changeSort = (data: any) => {
     setSorted(data);
   };
-  console.log(sorted);
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['products'],
-    queryFn: async () => {
-      return await getProduct({ categoryId });
-    },
+    queryKey: ['products', categoryId],
+    queryFn: () => getProduct({ categoryId }),
   });
 
   useEffect(() => {
@@ -103,6 +101,7 @@ const CategoryProducts = () => {
   const handlePage = (e: any) => {
     setCurrentPage(parseInt(e.target.outerText));
   };
+  console.log(data);
   return (
     <SearchRoot>
       <SearchFrame>
@@ -110,9 +109,37 @@ const CategoryProducts = () => {
       </SearchFrame>
       <CategoryFrame changeSort={changeSort} />
       <CategoryboxFrame>
-        {data?.data.response.map((item: any) => {
+        {data &&
+          data?.data.response.map((item: any) => {
+            return (
+              <CategoryBoxRoot>
+                <CategoryBoxChild
+                  loading="lazy"
+                  alt=""
+                  src={item?.fundingImage}
+                />
+                <CategoryBoxInner>
+                  <Parent1>
+                    <Div>{item?.fundingTitle}</Div>
+                    <Wrapper>
+                      <B>{`${item?.individualPrice}원`}</B>
+                    </Wrapper>
+                    <B>{`${item?.fundingPercent}%`}</B>
+                    <Group>
+                      <Div1>{item?.nickname}</Div1>
+                      <VectorParent>
+                        <FavoriteBorderIcon sx={{ cursor: 'pointer' }} />
+                        <ButtonFrame>{item?.likes}</ButtonFrame>
+                      </VectorParent>
+                    </Group>
+                  </Parent1>
+                </CategoryBoxInner>
+              </CategoryBoxRoot>
+            );
+          })}
+        {/* {data?.data.response.map((item: any) => {
           return <CategoryBox {...item} />;
-        })}
+        })} */}
         {/* <CategoryBox
           propPadding="0rem var(--padding-12xs) 0rem 0rem"
           propGap="0rem 0.563rem"
@@ -155,3 +182,100 @@ const CategoryProducts = () => {
 };
 
 export default CategoryProducts;
+
+//
+
+const CategoryBoxChild = styled.img`
+  align-self: stretch;
+  flex: 1;
+  position: relative;
+  border-radius: var(--br-5xl);
+  max-width: 100%;
+  overflow: hidden;
+  max-height: 100%;
+  object-fit: cover;
+`;
+const Div = styled.div`
+  position: relative;
+  @media screen and (max-width: 450px) {
+    font-size: var(--font-size-lgi);
+  }
+`;
+// const B = styled.b`
+//   position: relative;
+//   @media screen and (max-width: 450px) {
+//     font-size: var(--font-size-lgi);
+//   }
+// `;
+const Wrapper = styled.div`
+  display: flex;
+
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0rem 0rem var(--padding-8xs);
+  color: var(--color-dodgerblue-200);
+`;
+const Div1 = styled.div`
+  position: relative;
+  font-weight: 500;
+`;
+
+const ButtonFrame = styled.div`
+  position: relative;
+  @media screen and (max-width: 450px) {
+    font-size: var(--font-size-base);
+  }
+`;
+const VectorParent = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0rem 0.563rem;
+  font-size: var(--font-size-xl);
+  color: var(--color-black);
+`;
+const Group = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0rem var(--padding-12xs) 0rem 0rem;
+  gap: 0.438rem 0rem;
+  font-size: var(--font-size-base);
+  color: var(--color-gray-100);
+`;
+const Parent1 = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.5rem 0rem;
+`;
+const CategoryBoxInner = styled.div`
+  align-self: stretch;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+`;
+const CategoryBoxRoot = styled.div`
+  height: 25.25rem;
+  width: 22.625rem;
+  background-color: var(--color-white);
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: var(--padding-3xs) var(--padding-3xs) var(--padding-2xl);
+  box-sizing: border-box;
+  gap: 0.625rem 0rem;
+  max-width: 100%;
+  text-align: left;
+  font-size: var(--font-size-5xl);
+  color: var(--color-black);
+  font-family: var(--font-pretendard);
+`;

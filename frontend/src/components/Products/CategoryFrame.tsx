@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 const PriceRangeFrameChild = styled.div`
@@ -147,7 +147,11 @@ const FRAMERoot = styled.div`
   font-family: var(--font-pretendard);
 `;
 
-const CategoryFrame: FunctionComponent = ({ changeSort }: any) => {
+type Props = {
+  changeSort: (value: any) => any;
+};
+
+const CategoryFrame: React.FC<Props> = ({ changeSort }: any) => {
   const [state, setState] = useState('');
   const changeHandler = (e: any) => {
     setState(e.target.id);

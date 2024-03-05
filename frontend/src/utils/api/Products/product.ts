@@ -18,7 +18,6 @@ export async function getProduct({
   max_price = '',
   search = '',
 }: any) {
-  console.log(categoryId);
   const result =
     await api.get(`/fundings?page=${page}&category=${categoryId}&sorted=${sorted}&min_price=
   ${min_price}&max_price=${max_price}&search=${search}`);
