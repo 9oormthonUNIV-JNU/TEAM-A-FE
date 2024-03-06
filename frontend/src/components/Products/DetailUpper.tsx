@@ -4,7 +4,9 @@ import testImg from '../../assets/images/mainLogo.svg';
 import ShareIcon from '@mui/icons-material/Share';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { detailProduct } from '../../utils/api/Products/product';
 
 const FrameBIcon = styled.img`
   position: absolute;
@@ -276,44 +278,93 @@ const InfoRoot = styled.div`
   }
 `;
 
+// interface IDetails {
+//   category: string;
+//   comments: [];
+//   fundingDescription: string;
+//   fundingId: number;
+//   fundingImages: [string];
+//   fundingPercent: number;
+//   fundingSummary: string;
+//   fundingTitle: string;
+//   individualPrice: number;
+//   state: string;
+// }
+
 const DetailUpper: FunctionComponent = () => {
   const navigate = useNavigate();
+  const { productId } = useParams();
   const handleCategory = (e: any) => {
     const categoryId: string = e.target.id;
-
     navigate(`/category/${categoryId}`);
   };
 
+  const { data, isError } = useQuery({
+    queryKey: ['Detail-funding', productId],
+    queryFn: () => detailProduct(productId),
+  });
+  console.log(data?.data.response);
+  if (isError) return <div>No data!</div>;
+
   return (
     <InfoRoot>
-      <FrameBIcon loading="lazy" alt="" src={testImg} />
-      <FrameAIcon loading="lazy" alt="" src={testImg} />
-      <FrameAIcon1 loading="lazy" alt="" src={testImg} />
-      <FrameAIcon2 loading="lazy" alt="" src={testImg} />
+      <FrameBIcon
+        loading="lazy"
+        alt=""
+        src={
+          data?.data.response.fundingImages[0]
+            ? data?.data.response.fundingImages[0].fundingImage
+            : testImg
+        }
+      />
+      <FrameAIcon
+        loading="lazy"
+        alt=""
+        src={
+          data?.data.response.fundingImages[1]
+            ? data?.data.response.fundingImages[1].fundingImage
+            : testImg
+        }
+      />
+      <FrameAIcon1
+        loading="lazy"
+        alt=""
+        src={
+          data?.data.response.fundingImages[2]
+            ? data?.data.response.fundingImages[2].fundingImage
+            : testImg
+        }
+      />
+      <FrameAIcon2
+        loading="lazy"
+        alt=""
+        src={
+          data?.data.response.fundingImages[3]
+            ? data?.data.response.fundingImages[3].fundingImage
+            : testImg
+        }
+      />
       <FRAME>
         <FrameC>
           <FrameD>
             <Iconoirnavarrowright onClick={handleCategory}>
-              <B id="tech">테크 가전</B>
+              <B id={data?.data.response.category}>
+                {data?.data.response.category}
+              </B>
               <ArrowForwardIosIcon id="tech" />
             </Iconoirnavarrowright>
             <FrameG>
               <FrameH>
-                <Div>오픈 예정</Div>
+                <Div>{data?.data.response.fundingStateDescription}</Div>
               </FrameH>
-              <H>엄청 맛있고 달달케이크</H>
+              <H>{data?.data.response.fundingTitle}</H>
             </FrameG>
           </FrameD>
-          <MaurisArcuSed>
-            Mauris arcu sed est enim viverra. Faucibus a viverra nibh nam
-            hendrerit augue senectus facilisis nisl. Tortor id feugiat dui
-            turpis pretium tempor diam. Platea a dui etiam urna eget cursus
-            felis faucibus mi.
-          </MaurisArcuSed>
+          <MaurisArcuSed>{data?.data.response.fundingSummary}</MaurisArcuSed>
         </FrameC>
         <Div1>
           <B1>
-            <Span>120%</Span>
+            <Span>{`${data?.data.response.fundingPercent}%`}</Span>
             <Span1>{` `}</Span1>
           </B1>
           <Span1>
@@ -321,7 +372,7 @@ const DetailUpper: FunctionComponent = () => {
           </Span1>
         </Div1>
         <FrameJ>
-          <B2>33,333원</B2>
+          <B2>{`${data?.data.response.individualPrice}원`}</B2>
           <ParentFrame>
             <OpenNotificationBtn>
               <B3>오픈 알림 신청 하기</B3>
@@ -334,6 +385,7 @@ const DetailUpper: FunctionComponent = () => {
             </ComboIcon>
           </ParentFrame>
         </FrameJ>
+        <div>{data?.data.response.fundingDescription}</div>
       </FRAME>
     </InfoRoot>
   );

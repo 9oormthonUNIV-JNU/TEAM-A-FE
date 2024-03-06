@@ -2,10 +2,12 @@ import styled from 'styled-components';
 import FrameComponent5 from '../components/Products/FundingCreateDate';
 
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import PostImage from '../components/Products/PostImage';
+import { getAuthToken } from '../utils/tokenHandler';
+import { postProduct } from '../utils/api/Products/product';
 
 const H = styled.h3`
   margin: 0;
@@ -391,7 +393,7 @@ const CreateFundingRoot = styled.form`
 `;
 
 interface IFunding {
-  category?: string;
+  category: string;
   goals: number;
   participation: number;
   title: string;
@@ -400,10 +402,18 @@ interface IFunding {
 }
 
 const CreateFunding = () => {
+  const token = getAuthToken();
+  const headers = {
+    Authorization: token,
+  };
   const { register, handleSubmit, watch } = useForm<IFunding>();
+
+  const navigate = useNavigate();
 
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
+
+  const [images, setImages] = useState([]);
   const handleStartDate = (data: string) => {
     setStart(data);
   };
@@ -411,15 +421,27 @@ const CreateFunding = () => {
     setEnd(data);
   };
 
-  const handleFormSubmit = (data: IFunding) => {
-    console.log(1);
+  const getImages = (data: any) => {
+    setImages(data?.data.response);
+  };
 
+  const handleFormSubmit = async (data: IFunding) => {
     const formData = {
-      ...data,
-      start_date: start,
-      end_date: end,
+      fundingDescription: data.funding_description,
+      fundingSummary: data.funding_summary,
+      fundingTitle: data.title,
+      category: data.category,
+      startDate: start,
+      endDate: end,
+      imageUrls: images,
     };
-    console.log(formData);
+    try {
+      const result = await postProduct(formData, headers);
+      console.log(result);
+      navigate(`/products/${result.data.response}`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const indivisual = Math.round(
@@ -527,7 +549,7 @@ const CreateFunding = () => {
             <CameraAltIcon fontSize="large" />
             <Div1>이미지 첨부하기</Div1>
           </ImageUploadFrame> */}
-          <PostImage />
+          <PostImage getImages={getImages} />
         </SubtitleFrame>
         <EndFrame>
           <B>간단한 상품 설명</B>
@@ -541,7 +563,7 @@ const CreateFunding = () => {
       </TitleFrame>
       <ProductDetailsFrame>
         <B>상품 상세 설명</B>
-        {/* <CompletionFrame rows={18} cols={76} /> */}
+
         <ContentFrameB
           style={{ height: '22rem' }}
           placeholder="제품 상세 설명을 작성해 주세요."

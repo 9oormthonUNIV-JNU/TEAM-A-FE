@@ -3,9 +3,11 @@ import Dialog from '@mui/material/Dialog';
 import { useState } from 'react';
 import { styled } from 'styled-components';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import ImageInput from './ImageInput';
+import { postImage } from '../../utils/api/Products/product';
+import AddIcon from '@mui/icons-material/Add';
+import { IconButton } from '@mui/material';
 
-export default function PostImage() {
+export default function PostImage({ getImages }: any) {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = (e: any) => {
@@ -15,6 +17,46 @@ export default function PostImage() {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const hanldeImageSubmit = async () => {
+    try {
+      setOpen(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [detailImgs, setDetailImgs] = useState<any>([]);
+
+  const handlePostImage = async (e: any) => {
+    const fileArr = e.target.files;
+
+    const formData = new FormData();
+    for (let i = 0; i < fileArr.length; i++) {
+      formData.append('images', fileArr[i]);
+    }
+
+    try {
+      const result = await postImage(formData);
+      getImages(result);
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+
+    const fileURLs: any = [];
+    let file;
+    const filesLength = fileArr.length > 5 ? 5 : fileArr.length;
+    for (let i = 0; i < filesLength; i++) {
+      file = fileArr[i];
+      const reader = new FileReader();
+      reader.onload = () => {
+        fileURLs[i] = reader.result;
+        setDetailImgs([...fileURLs]);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -40,14 +82,38 @@ export default function PostImage() {
         <MainFrameRoot>
           <InnerFrames>
             <B>사진 첨부하기</B>
-            <ImageInput />
+            {/* // */}
+            <ImageInputRoot>
+              <ContainerWithFrames>
+                <DividerFrames src={detailImgs ? detailImgs[1] : ''} />
+                <DividerFrames src={detailImgs ? detailImgs[2] : ''} />
+                <DividerFrames src={detailImgs ? detailImgs[3] : ''} />
+                {/* <DividerFramesIcon loading="lazy" alt="" /> */}
+                <IconButton
+                  component="label"
+                  aria-label="upload new picture"
+                  color="primary"
+                  style={{ height: '10rem', width: '10rem' }}
+                >
+                  <AddIcon />
+                  <VisuallyHiddenInput
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handlePostImage}
+                  />
+                </IconButton>
+              </ContainerWithFrames>
+              <ButtonsFrames src={detailImgs ? detailImgs[0] : ''} />
+            </ImageInputRoot>
+            {/*//*/}
           </InnerFrames>
           <ToggleFrames>
             <CancelRegisterFrames>
               <B1 onClick={handleClose}>취소</B1>
             </CancelRegisterFrames>
             <CancelRegisterFrames1>
-              <B2>등록</B2>
+              <B2 onClick={hanldeImageSubmit}>등록</B2>
             </CancelRegisterFrames1>
           </ToggleFrames>
         </MainFrameRoot>
@@ -206,4 +272,60 @@ const MainFrameRoot = styled.div`
   @media screen and (max-width: 450px) {
     gap: 6.063rem 0rem;
   }
+`;
+//
+const DividerFrames = styled.img`
+  align-self: stretch;
+  flex: 1;
+  position: relative;
+  background-color: var(--color-gray-100);
+  overflow: hidden;
+`;
+
+const ContainerWithFrames = styled.div`
+  align-self: stretch;
+  width: 10rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1.625rem 0rem;
+  @media screen and (max-width: 675px) {
+    display: none;
+  }
+`;
+const ButtonsFrames = styled.img`
+  align-self: stretch;
+  flex: 1;
+  position: relative;
+  background-color: var(--color-gray-100);
+  overflow: hidden;
+  max-width: calc(100% - 201px);
+  @media screen and (max-width: 675px) {
+    max-width: 100%;
+  }
+`;
+const ImageInputRoot = styled.section`
+  align-self: stretch;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0rem 2.563rem;
+  max-width: 100%;
+  @media screen and (max-width: 450px) {
+    gap: 0rem 2.563rem;
+  }
+`;
+const VisuallyHiddenInput = styled('input')`
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  white-space: nowrap;
+  width: 100%;
 `;

@@ -1,7 +1,8 @@
 import { FunctionComponent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-const FundingBoxChild = styled.textarea`
+const FundingBoxChild = styled.img`
   border: none;
   background-color: var(--color-gainsboro);
   height: 17.25rem;
@@ -97,18 +98,27 @@ const FundingBoxRoot = styled.div`
   }
 `;
 
-const PopularBox: FunctionComponent = () => {
+const PopularBox: FunctionComponent = (detail: any) => {
+  const navigate = useNavigate();
+  const handleNavigate = (e: any) => {
+    const id = e.target.id;
+    navigate(`/products/${id}`);
+  };
   return (
     <FundingBoxRoot>
-      <FundingBoxChild rows={14} cols={23} />
+      <FundingBoxChild
+        id={detail.fundingId}
+        src={detail.fundingImage}
+        onClick={(e) => handleNavigate(e)}
+      />
       <ProductNameEllipse>
         <CompanyLogoFrame>
-          <Div>테크 가전 {'>'}</Div>
+          <Div>{`${detail.category} >`}</Div>
         </CompanyLogoFrame>
         <FundingItemName>
-          <B>펀딩상품 이름</B>
-          <B1>35,000원</B1>
-          <Div1>회사 이름</Div1>
+          <B>{detail.fundingTitle}</B>
+          <B1>{`${detail.individualPrice}원`}</B1>
+          <Div1>{detail.nickname}</Div1>
         </FundingItemName>
       </ProductNameEllipse>
     </FundingBoxRoot>

@@ -148,7 +148,7 @@ const LoginComponent: FunctionComponent = () => {
       const result = await postLogin(data);
       console.log(result);
       if (result) {
-        getToken(result.headers?.get('Authorization'));
+        getToken(result.headers.authorization);
         navigate('/');
       } else {
         setError('email', { message: '토큰이 없습니다. 재로그인 해주세요.' });
@@ -213,6 +213,7 @@ const LoginComponent: FunctionComponent = () => {
             {errors.email ? errors.email.message : errors.password?.message}
           </ErrorSpan>
         )}
+
         <LoginButton
           onClick={handleSubmit(onValid)}
           disableElevation={true}

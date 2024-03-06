@@ -55,13 +55,12 @@ const FrameComponent5: FunctionComponent<FrameComponent5Type> = (props) => {
   const date = new Date();
   const [value, setValue] = useState<Dayjs | null>(dayjs(date));
   if (value) {
-    const formattedDate = value.format(`YYYY/MM/DD${props.prop}`);
-    console.log(formattedDate);
+    const formattedDate = value.format(`YYYY-MM-DD${props.prop}`);
     if (formattedDate.endsWith('료')) {
-      props.handleEndDate(formattedDate.slice(0, 10));
+      props.handleEndDate(value.toISOString());
     }
     if (formattedDate.endsWith('작')) {
-      props.handleStartDate(formattedDate.slice(0, 10));
+      props.handleStartDate(value.toISOString());
     }
   }
 

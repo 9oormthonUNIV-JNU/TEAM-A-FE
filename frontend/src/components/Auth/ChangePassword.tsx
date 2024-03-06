@@ -96,6 +96,7 @@ export default function ChangePassword() {
     try {
       const result = patchPassword({ password, checkPassword });
       console.log(result);
+      if (!result) setError(error);
       navigate('/auth/login');
     } catch (error) {
       console.log(error);

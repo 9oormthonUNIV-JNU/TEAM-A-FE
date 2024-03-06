@@ -1,5 +1,7 @@
 import { styled } from 'styled-components';
 import PopularBox from './PopularBox';
+import { useEffect, useState } from 'react';
+import { popularProduct } from '../../utils/api/MainPage/product';
 
 const FeaturedFundingAreaParent = styled.section`
   max-width: 1920px;
@@ -69,19 +71,42 @@ const H = styled.h1`
   }
 `;
 
+export interface IData {
+  detail: [
+    {
+      category?: string;
+      fundingId?: number;
+      fundingImage?: string;
+      fundingTitle?: string;
+      individualPrice?: number;
+      nickname?: string;
+    },
+  ];
+}
+
 export default function PopularProduct() {
+  const [data, setData] = useState<IData['detail']>();
+  const callPopular = async () => {
+    try {
+      const result = await popularProduct();
+      console.log(result);
+      setData(result?.data.response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    callPopular();
+  }, []);
   return (
     <FeaturedFundingAreaParent>
       <FeaturedFundingArea>
         <H>지금 인기있는 펀딩</H>
       </FeaturedFundingArea>
       <FundingBoxParent>
-        <PopularBox />
-        <PopularBox />
-        <PopularBox />
-        <PopularBox />
-        <PopularBox />
-        <PopularBox />
+        {data?.map((data: any) => {
+          return <PopularBox {...data} />;
+        })}
       </FundingBoxParent>
     </FeaturedFundingAreaParent>
   );

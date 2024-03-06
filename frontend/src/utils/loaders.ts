@@ -1,7 +1,7 @@
-import { categoryProduct, detailProduct } from './api/Products/category';
+import { getProduct, detailProduct } from './api/Products/product';
 
 export async function categoryLoader({ params }: any) {
-  const contact = await categoryProduct(params);
+  const contact = await getProduct({ params });
   if (!contact) {
     throw new Response('', {
       status: 404,
@@ -12,6 +12,7 @@ export async function categoryLoader({ params }: any) {
 }
 
 export async function detailsLoader({ params }: any) {
+  console.log(params);
   const contact = await detailProduct(params);
   if (!contact) {
     throw new Response('', {

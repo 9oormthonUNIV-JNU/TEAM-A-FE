@@ -1,7 +1,8 @@
 import { api } from '../../customAxios';
 
 export async function searchProduct(data: string) {
-  const result = await api.get(`/products?search${data}`);
+  const result = await api.get(`/fundings?page=&category=&sorted=&min_price=
+  &max_price=&search=${data}`);
   return result;
 }
 
