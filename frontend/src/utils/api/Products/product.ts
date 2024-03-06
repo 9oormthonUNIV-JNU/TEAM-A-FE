@@ -37,7 +37,7 @@ export async function postProduct(data: any, headers: any) {
 
 export async function postImage(data: any) {
   const result = await axios.post(
-    'https://65e7d8aa66c37ab29ba07019--ship-go-funding.netlify.app/fundings/images',
+    'http://3.34.57.226:8080/api/fundings/images',
     data,
     { headers },
   );

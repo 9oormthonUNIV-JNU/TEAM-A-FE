@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
 const api: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_CLIENT_URL_PROXY, // 기본 서버 주소 입력
+  baseURL: import.meta.env.VITE_CLIENT_URL, // 기본 서버 주소 입력
   timeout: 3000,
   headers: {
     'Content-Type': 'application/json',
