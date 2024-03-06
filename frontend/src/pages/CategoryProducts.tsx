@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import CategoryFrame from '../components/Products/CategoryFrame';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getProduct } from '../utils/api/Products/product';
 import { Pagination } from '@mui/material';
@@ -67,6 +67,7 @@ const SearchRoot = styled.div`
 
 const CategoryProducts = () => {
   const { categoryId } = useParams();
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const queryClient = useQueryClient();
   //데이터 분류별 인기순/최신순/마감임박순
@@ -77,19 +78,19 @@ const CategoryProducts = () => {
   };
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['products', categoryId],
-    queryFn: () => getProduct({ categoryId }),
+    queryKey: ['products', currentPage, categoryId, sorted],
+    queryFn: () => getProduct({ page: currentPage, categoryId, sorted }),
   });
 
   useEffect(() => {
     if (currentPage < 10) {
       const page = currentPage + 1;
       queryClient.prefetchQuery({
-        queryKey: ['products', page],
-        queryFn: () => getProduct({ page }),
+        queryKey: ['products', page, categoryId, sorted],
+        queryFn: () => getProduct({ page, categoryId, sorted }),
       });
     }
-  }, [currentPage, queryClient]);
+  }, [currentPage, queryClient, categoryId, sorted]);
 
   if (isLoading) {
     return <h1>loading..</h1>;
@@ -114,6 +115,7 @@ const CategoryProducts = () => {
             return (
               <CategoryBoxRoot>
                 <CategoryBoxChild
+                  onClick={() => navigate(`/products/${item.fundingId}`)}
                   loading="lazy"
                   alt=""
                   src={item?.fundingImage}

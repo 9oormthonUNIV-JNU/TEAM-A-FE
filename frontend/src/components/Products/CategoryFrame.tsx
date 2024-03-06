@@ -152,6 +152,8 @@ type Props = {
 };
 
 const CategoryFrame: React.FC<Props> = ({ changeSort }: any) => {
+  const [min, setMin] = useState(0);
+  const [max, setMax] = useState(0);
   const [state, setState] = useState('');
   const changeHandler = (e: any) => {
     setState(e.target.id);
@@ -187,9 +189,17 @@ const CategoryFrame: React.FC<Props> = ({ changeSort }: any) => {
             <B>가격 필터</B>
           </FramePRICEFILTER>
           <FrameTWOFRAMES>
-            <PriceInput placeholder="0" />
+            <PriceInput
+              placeholder="0"
+              value={min}
+              onChange={(e: any) => setMin(e.target.value)}
+            />
             <SearchFrame>~</SearchFrame>
-            <PriceInput placeholder="2,000,000" />
+            <PriceInput
+              placeholder="2,000,000"
+              value={max}
+              onChange={(e: any) => setMax(e.target.value)}
+            />
             <NavbarContainer>
               <Div1>적용</Div1>
             </NavbarContainer>

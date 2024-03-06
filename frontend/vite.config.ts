@@ -1,15 +1,14 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import * as path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  resolve: {
-    alias: {
-      '@@': path.resolve(__dirname, './src/'),
-    },
-  },
+  // resolve: {
+  //   alias: {
+  //     '@@': path.resolve(__dirname, './src/'),
+  //   },
+  // },
   server: {
     proxy: {
       '/api': {
@@ -21,9 +20,9 @@ export default defineConfig({
     },
   },
   build: {
-    rollupOptions: {
-      external: ['axios'],
-    },
+    // rollupOptions: {
+    //   external: ['axios'],
+    // },
     chunkSizeWarningLimit: 1600,
   },
 });

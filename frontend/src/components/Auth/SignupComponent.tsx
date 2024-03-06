@@ -1,11 +1,15 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import { TextField, Button } from '@mui/material';
 
 import styled from 'styled-components';
 import SignupUpperComponent from './SignupUpperComponent';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { postEmailConfirm, postSignup } from '../../utils/api/Auth/auth';
+import {
+  postSignup,
+  postSignupCodeConfirm,
+  postSignupEmailConfirm,
+} from '../../utils/api/Auth/auth';
 // import { dataTagSymbol } from '@tanstack/react-query';
 
 const B = styled.b`
@@ -344,17 +348,37 @@ const Signup: FunctionComponent = () => {
     formState: { errors },
     // reset,
     getValues,
+    watch,
+    clearErrors,
   } = useForm<IForm>();
 
   const navigate = useNavigate();
 
+  const [code, setCode] = useState('');
+
+  const codeValid = async () => {
+    try {
+      const email = watch('email');
+      const result = await postSignupCodeConfirm({ email, usercode: code });
+      console.log(result);
+      clearErrors('email');
+      alert('인증성공');
+    } catch (error: any) {
+      console.log(error);
+      setError('email', { message: `${error.response.data.error}` });
+    }
+  };
+
   const emValid = async () => {
     const email = getValues('email');
     try {
-      await postEmailConfirm(email);
-    } catch (error) {
+      const result = await postSignupEmailConfirm(email);
+      console.log(result);
+      clearErrors('email');
+      alert('인증번호 전송');
+    } catch (error: any) {
       //백과 통신후 에러 표시 하기 setError
-      setError('email', { message: `${error}` });
+      setError('email', { message: `${error.response.data.error}` });
       console.log(error);
     }
   };
@@ -441,6 +465,7 @@ const Signup: FunctionComponent = () => {
                           },
                           '& .MuiInputBase-input': { color: '#8f8f8f' },
                         }}
+                        onChange={(e: any) => setCode(e.target.value)}
                       />
                       <EmailButton
                         disableElevation={true}
@@ -455,6 +480,7 @@ const Signup: FunctionComponent = () => {
                           width: 136,
                           height: 65,
                         }}
+                        onClick={codeValid}
                       >
                         확인
                       </EmailButton>

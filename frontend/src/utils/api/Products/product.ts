@@ -18,6 +18,10 @@ export async function getProduct({
   max_price = '',
   search = '',
 }: any) {
+  if (categoryId === '전체') {
+    categoryId = '';
+  }
+  console.log(sorted);
   const result =
     await api.get(`/fundings?page=${page}&category=${categoryId}&sorted=${sorted}&min_price=
   ${min_price}&max_price=${max_price}&search=${search}`);

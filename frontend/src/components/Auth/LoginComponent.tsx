@@ -185,6 +185,7 @@ const LoginComponent: FunctionComponent = () => {
           })}
         />
         <EmailInputFrame
+          type="password"
           placeholder="비밀번호 입력"
           variant="outlined"
           sx={{
