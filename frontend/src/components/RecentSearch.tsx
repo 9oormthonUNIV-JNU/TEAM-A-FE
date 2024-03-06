@@ -56,7 +56,7 @@ export default function RecentSearch({ open }: any) {
       <SearchContent>
         {array.length === 0 && <NoRecentData />}
         {reverseArray.map((data, i) => {
-          return <RecentItems item={data} key={i} />;
+          return <RecentItems {...data} key={i} />;
         })}
       </SearchContent>
     </Wrapper>

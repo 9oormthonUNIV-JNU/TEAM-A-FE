@@ -22,7 +22,7 @@ export default function CarouselPosts() {
   }, []);
   return (
     <MultiCarousel>
-      {data.map((item) => {
+      {data.map((item: any) => {
         return (
           <CarouselImg
             src={item.bannerImage}

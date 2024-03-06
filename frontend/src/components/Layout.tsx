@@ -20,7 +20,7 @@ import { getTokenDuration } from '../utils/tokenHandler';
 // import axios from 'axios';
 
 import UserIcon from './Home/UserIcon';
-// im
+
 const FundingFrame = () => {
   const token = useLoaderData();
   const submit = useSubmit();
@@ -41,20 +41,21 @@ const FundingFrame = () => {
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
-  const ref = useRef(null);
+  const ref = useRef<any>(null);
 
   const navigate = useNavigate();
 
   const setSearchHistory = useSetRecoilState(searchState);
 
   const handleClickOutside = (e: MouseEvent) => {
+    // const a = ref.current as HTMLInputElement
     if (ref.current)
       if (!ref.current.contains(e.target as Node)) {
         setOpen(false);
       }
   };
 
-  const handleNavigateCategory = async (e: React.MouseEvent) => {
+  const handleNavigateCategory = async (e: any) => {
     const categoryId = e.target.id;
     try {
       // const result = await getProduct({ categoryId });

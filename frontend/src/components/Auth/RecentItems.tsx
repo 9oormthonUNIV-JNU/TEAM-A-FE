@@ -40,7 +40,7 @@ const IconWrapper = styled.div`
   align-items: center;
 `;
 
-export const RecentItems: FunctionComponent = ({ item }: any) => {
+export const RecentItems: FunctionComponent = ({ data }: any) => {
   return (
     <ContainerFrameRoot>
       <IconFrame>
@@ -49,7 +49,7 @@ export const RecentItems: FunctionComponent = ({ item }: any) => {
             sx={{ marginRight: 1, color: '#8F8F8F' }}
             fontSize="medium"
           />
-          <Div>{item}</Div>
+          <Div>{data}</Div>
         </IconWrapper>
       </IconFrame>
     </ContainerFrameRoot>

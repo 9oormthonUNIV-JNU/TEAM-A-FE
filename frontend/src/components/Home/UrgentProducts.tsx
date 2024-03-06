@@ -1,6 +1,5 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import testImg from '../../assets/images/kakao.png';
 import { urgentProduct } from '../../utils/api/MainPage/product';
 import { changeResult, changeSeconds } from '../../utils/timeHandler';
 import { useQuery } from '@tanstack/react-query';
