@@ -156,11 +156,12 @@ const CategoryFrame: React.FC<Props> = ({ changeSort }: any) => {
   const [max, setMax] = useState(0);
   const [state, setState] = useState('');
   const changeHandler = (e: any) => {
+    e.preventDefault();
     setState(e.target.id);
   };
   useEffect(() => {
-    changeSort(state);
-  }, [state, changeSort]);
+    changeSort({ state, min, max });
+  }, [state, changeSort, min, max]);
   return (
     <FRAMERoot>
       <PriceRangeFrame>

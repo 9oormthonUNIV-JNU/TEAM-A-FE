@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import styled from 'styled-components';
 import testImg from '../../assets/images/mainLogo.svg';
 import ShareIcon from '@mui/icons-material/Share';
@@ -6,7 +6,17 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { detailProduct } from '../../utils/api/Products/product';
+import {
+  detailProduct,
+  postFundingApply,
+} from '../../utils/api/Products/product';
+import CreateIcon from '@mui/icons-material/Create';
+import avatarImage from '../../assets/images/avatar.svg';
+import { Input } from '@mui/material';
+import { getAuthToken } from '../../utils/tokenHandler';
+import Divider from '@mui/material/Divider';
+import dot from '../../assets/images/dot.svg';
+import { postFundingComment } from '../../utils/api/Products/comment';
 
 const FrameBIcon = styled.img`
   position: absolute;
@@ -265,7 +275,7 @@ const FRAME = styled.div`
 const InfoRoot = styled.div`
   position: relative;
   width: 100%;
-  height: 1768px;
+  height: 200rem;
   overflow: hidden;
   letter-spacing: normal;
   text-align: left;
@@ -278,32 +288,53 @@ const InfoRoot = styled.div`
   }
 `;
 
-// interface IDetails {
-//   category: string;
-//   comments: [];
-//   fundingDescription: string;
-//   fundingId: number;
-//   fundingImages: [string];
-//   fundingPercent: number;
-//   fundingSummary: string;
-//   fundingTitle: string;
-//   individualPrice: number;
-//   state: string;
-// }
-
 const DetailUpper: FunctionComponent = () => {
+  const auth = getAuthToken();
   const navigate = useNavigate();
   const { productId } = useParams();
+  const [comment, setComment] = useState('');
+
+  const [commentChange, setCommentChange] = useState(false);
   const handleCategory = (e: any) => {
     const categoryId: string = e.target.id;
     navigate(`/category/${categoryId}`);
   };
 
+  const postComment = async (e: any) => {
+    e.preventDefault();
+    try {
+      const result = await postFundingComment({
+        fundingId: productId,
+        comment,
+      });
+      setCommentChange((v) => !v);
+      console.log(result);
+      setComment('');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fundingApply = async () => {
+    const headers = {
+      Authorization: auth,
+    };
+    try {
+      const result = await postFundingApply(productId, headers);
+      console.log(result);
+      alert('알림신청완료');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const { data, isError } = useQuery({
-    queryKey: ['Detail-funding', productId],
+    queryKey: ['Detail-funding', productId, commentChange],
     queryFn: () => detailProduct(productId),
+
+    // enabled:{}
   });
-  console.log(data?.data.response);
+
   if (isError) return <div>No data!</div>;
 
   return (
@@ -375,7 +406,7 @@ const DetailUpper: FunctionComponent = () => {
           <B2>{`${data?.data.response.individualPrice}원`}</B2>
           <ParentFrame>
             <OpenNotificationBtn>
-              <B3>오픈 알림 신청 하기</B3>
+              <B3 onClick={fundingApply}>오픈 알림 신청 하기</B3>
             </OpenNotificationBtn>
             <ComboIcon>
               <FavoriteBorderIcon sx={{ color: '#8F8F8F' }} fontSize="large" />
@@ -385,8 +416,52 @@ const DetailUpper: FunctionComponent = () => {
             </ComboIcon>
           </ParentFrame>
         </FrameJ>
+        <Divider />
         <div>{data?.data.response.fundingDescription}</div>
-        <Comment />
+        <Divider />
+        <DivRoot>
+          <Parent1>
+            <H12>댓글</H12>
+            <form onSubmit={postComment}>
+              <ChatBar
+                sx={{ fontSize: '50px' }}
+                placeholder={auth ? '댓글 입력' : '로그인 해주세요.'}
+                endAdornment={
+                  <CreateIcon fontSize="large" style={{ cursor: 'pointer' }} />
+                }
+                disabled={auth ? false : true}
+                value={comment}
+                onChange={(e: any) => setComment(e.target.value)}
+              />
+            </form>
+            {data?.data.response.comments
+              .slice(0)
+              .reverse()
+              .map((comment: any) => {
+                return (
+                  <Inner key={comment.commentId}>
+                    <EllipseParent>
+                      <FrameChild src={avatarImage} />
+                      <FrameWrapper>
+                        <IconoirmoreVertParent>
+                          <IconoirmoreVert loading="lazy" alt="" src={dot} />
+                          <FrameParent>
+                            <JkParent>
+                              <Jk>{comment.nickname}</Jk>
+                              <Div12>1분전</Div12>
+                            </JkParent>
+                            <Wrapper>
+                              <Div2>{comment.content}</Div2>
+                            </Wrapper>
+                          </FrameParent>
+                        </IconoirmoreVertParent>
+                      </FrameWrapper>
+                    </EllipseParent>
+                  </Inner>
+                );
+              })}
+          </Parent1>
+        </DivRoot>
       </FRAME>
     </InfoRoot>
   );
@@ -410,43 +485,12 @@ const H12 = styled.h2`
     font-size: var(--font-size-10xl);
   }
 `;
-const ChatBarChild = styled.div`
-  height: 135px;
-  width: 1520px;
-  position: relative;
-  border-radius: var(--br-11xl);
-  background-color: var(--color-white);
-  border: 1px solid var(--color-black);
-  box-sizing: border-box;
-  display: none;
-  max-width: 100%;
-`;
-const Div4 = styled.div`
-  height: 43px;
-  position: relative;
-  font-weight: 500;
-  display: inline-block;
-  z-index: 1;
-  @media screen and (max-width: 1050px) {
-    font-size: var(--font-size-10xl);
-  }
-  @media screen and (max-width: 450px) {
-    font-size: var(--font-size-3xl);
-  }
-`;
-const IconoireditPencil = styled.img`
-  height: 64px;
-  width: 64px;
-  position: relative;
-  overflow: hidden;
-  flex-shrink: 0;
-  z-index: 1;
-`;
-const ChatBar = styled.div`
+
+const ChatBar = styled(Input)`
   align-self: stretch;
   border-radius: var(--br-11xl);
   background-color: var(--color-white);
-  border: 1px solid var(--color-black);
+  /* border: 1px solid var(--color-black); */
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
@@ -481,7 +525,7 @@ const Parent1 = styled.section`
     gap: 35px 0px;
   }
 `;
-const FrameChild = styled.div`
+const FrameChild = styled.img`
   height: 100px;
   width: 100px;
   position: relative;
@@ -609,7 +653,7 @@ const Inner = styled.footer`
   font-family: var(--font-pretendard);
 `;
 const DivRoot = styled.div`
-  width: 100rem;
+  width: 95rem;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -623,41 +667,3 @@ const DivRoot = styled.div`
     gap: 57px 0px;
   }
 `;
-
-const Comment = () => {
-  return (
-    <DivRoot>
-      <Parent1>
-        <H12>댓글</H12>
-        <ChatBar>
-          <ChatBarChild />
-          <Div4>로그인 해주세요</Div4>
-          <IconoireditPencil alt="" src="/iconoireditpencil.svg" />
-        </ChatBar>
-      </Parent1>
-      <Inner>
-        <EllipseParent>
-          <FrameChild />
-          <FrameWrapper>
-            <IconoirmoreVertParent>
-              <IconoirmoreVert
-                loading="lazy"
-                alt=""
-                src="/iconoirmorevert.svg"
-              />
-              <FrameParent>
-                <JkParent>
-                  <Jk>jk</Jk>
-                  <Div12>2일 전</Div12>
-                </JkParent>
-                <Wrapper>
-                  <Div2>혼자 따르는 재미가 있습니다ㅎ</Div2>
-                </Wrapper>
-              </FrameParent>
-            </IconoirmoreVertParent>
-          </FrameWrapper>
-        </EllipseParent>
-      </Inner>
-    </DivRoot>
-  );
-};

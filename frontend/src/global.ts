@@ -108,6 +108,10 @@ export default createGlobalStyle`
 --padding-33xl: 3.25rem;
 --padding-46xl: 4.063rem;
 --padding-smi: 0.813rem;
+--padding-17xl: 2.25rem;
+--padding-7xl: 1.625rem;
+--padding-16xl: 2.188rem;
+--padding-32xl: 3.188rem;
 
 /* Border radiuses */
 --br-5xl: 24px;

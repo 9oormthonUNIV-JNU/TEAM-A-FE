@@ -426,6 +426,7 @@ const CreateFunding = () => {
   };
 
   const handleFormSubmit = async (data: IFunding) => {
+    console.log(images);
     const formData = {
       fundingDescription: data.funding_description,
       fundingSummary: data.funding_summary,
@@ -434,6 +435,7 @@ const CreateFunding = () => {
       startDate: start,
       endDate: end,
       imageUrls: images,
+      validImageUrls: true,
     };
     try {
       const result = await postProduct(formData, headers);
@@ -482,13 +484,13 @@ const CreateFunding = () => {
                 sx={{ fontSize: 'var(--font-size-5xl)' }}
                 {...register('category')}
               >
-                <MenuItem value={'tech' || ''}>테크가전</MenuItem>
-                <MenuItem value={'fashion' || ''}>패션</MenuItem>
-                <MenuItem value={'beauty' || ''}>뷰티</MenuItem>
-                <MenuItem value={'food' || ''}>푸드</MenuItem>
-                <MenuItem value={'book' || ''}>도서</MenuItem>
-                <MenuItem value={'goods' || ''}>굿즈</MenuItem>
-                <MenuItem value={'stuff' || ''}>잡화</MenuItem>
+                <MenuItem value={'테크가전' || ''}>테크가전</MenuItem>
+                <MenuItem value={'패션' || ''}>패션</MenuItem>
+                <MenuItem value={'뷰티' || ''}>뷰티</MenuItem>
+                <MenuItem value={'푸드' || ''}>푸드</MenuItem>
+                <MenuItem value={'도서' || ''}>도서</MenuItem>
+                <MenuItem value={'굿즈' || ''}>굿즈</MenuItem>
+                <MenuItem value={'잡화' || ''}>잡화</MenuItem>
               </Select>
             </FormControl>
             <Frameset>

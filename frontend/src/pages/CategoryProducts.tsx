@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import CategoryFrame from '../components/Products/CategoryFrame';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getProduct } from '../utils/api/Products/product';
 import { Pagination } from '@mui/material';
@@ -67,30 +67,45 @@ const SearchRoot = styled.div`
 
 const CategoryProducts = () => {
   const { categoryId } = useParams();
+  const { state: search } = useLocation();
+
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
+
   const queryClient = useQueryClient();
   //데이터 분류별 인기순/최신순/마감임박순
   const [sorted, setSorted] = useState('');
-  console.log(sorted);
-  const changeSort = (data: any) => {
-    setSorted(data);
+  const [min, setMin] = useState();
+  const [max, setMax] = useState();
+  console.log('sorted', sorted);
+  console.log(min, max);
+
+  const changeSort = ({ state, min, max }: any) => {
+    setSorted(state);
+    setMin(min);
+    setMax(max);
   };
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['products', currentPage, categoryId, sorted],
-    queryFn: () => getProduct({ page: currentPage, categoryId, sorted }),
+    queryKey: ['products', currentPage, categoryId, sorted, search],
+    queryFn: () =>
+      getProduct({ page: currentPage, categoryId, sorted, search }),
   });
+
+  // const LAST_PAGE =
+  //   data?.data.response.length % 12 === 0
+  //     ? parseInt(data?.data.response.length / 12)
+  //     : parseInt(data?.data.response.length / 12) + 1;
 
   useEffect(() => {
     if (currentPage < 10) {
       const page = currentPage + 1;
       queryClient.prefetchQuery({
-        queryKey: ['products', page, categoryId, sorted],
-        queryFn: () => getProduct({ page, categoryId, sorted }),
+        queryKey: ['products', page, categoryId, sorted, search],
+        queryFn: () => getProduct({ page, categoryId, sorted, search }),
       });
     }
-  }, [currentPage, queryClient, categoryId, sorted]);
+  }, [currentPage, queryClient, categoryId, sorted, search]);
 
   if (isLoading) {
     return <h1>loading..</h1>;
@@ -103,6 +118,7 @@ const CategoryProducts = () => {
     setCurrentPage(parseInt(e.target.outerText));
   };
   console.log(data);
+
   return (
     <SearchRoot>
       <SearchFrame>
@@ -110,7 +126,9 @@ const CategoryProducts = () => {
       </SearchFrame>
       <CategoryFrame changeSort={changeSort} />
       <CategoryboxFrame>
-        {data &&
+        {data && data.data.response.length === 0 ? (
+          <span>no data</span>
+        ) : (
           data?.data.response.map((item: any) => {
             return (
               <CategoryBoxRoot>
@@ -138,36 +156,8 @@ const CategoryProducts = () => {
                 </CategoryBoxInner>
               </CategoryBoxRoot>
             );
-          })}
-        {/* {data?.data.response.map((item: any) => {
-          return <CategoryBox {...item} />;
-        })} */}
-        {/* <CategoryBox
-          propPadding="0rem var(--padding-12xs) 0rem 0rem"
-          propGap="0rem 0.563rem"
-        />
-        <CategoryBox
-          propPadding="0rem var(--padding-12xs) 0rem 0rem"
-          propGap="0rem 0.563rem"
-        />
-        <CategoryBox
-          propPadding="0rem var(--padding-12xs) 0rem 0rem"
-          propGap="0rem 0.563rem"
-        />
-        <CategoryBox propPadding="unset" propGap="0rem 0.5rem" />
-        <CategoryBox propPadding="unset" propGap="0rem 0.5rem" />
-        <CategoryBox propPadding="unset" propGap="0rem 0.5rem" />
-        <CategoryBox propPadding="unset" propGap="0rem 0.5rem" />
-        <CategoryBox
-          propPadding="0rem var(--padding-12xs) 0rem 0rem"
-          propGap="0rem 0.563rem"
-        />
-        <CategoryBox
-          propPadding="0rem var(--padding-12xs) 0rem 0rem"
-          propGap="0rem 0.563rem"
-        />
-        <CategoryBox propPadding="unset" propGap="0rem 0.5rem" />
-        <CategoryBox propPadding="unset" propGap="0rem 0.5rem" /> */}
+          })
+        )}
       </CategoryboxFrame>
       <Pagination
         count={10}

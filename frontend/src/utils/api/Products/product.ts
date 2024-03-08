@@ -21,7 +21,10 @@ export async function getProduct({
   if (categoryId === '전체') {
     categoryId = '';
   }
-  console.log(sorted);
+  if (search === null) {
+    search = '';
+  }
+
   const result =
     await api.get(`/fundings?page=${page}&category=${categoryId}&sorted=${sorted}&min_price=
   ${min_price}&max_price=${max_price}&search=${search}`);
@@ -35,15 +38,24 @@ export async function detailProduct(fundingId: any) {
 }
 
 export async function postProduct(data: any, headers: any) {
+  console.log(data);
+
   const result = await api.post('/fundings', data, { headers });
   return result;
 }
 
 export async function postImage(data: any) {
   const result = await axios.post(
-    'http://3.34.57.226:8080/api/fundings/images',
+    'http://15.164.198.63/api/fundings/images',
     data,
     { headers },
   );
+  return result;
+}
+
+export async function postFundingApply(fundingId: any, headers: any) {
+  console.log(fundingId);
+  console.log(headers);
+  const result = await api.post(`/fundings/${fundingId}/apply`, { headers });
   return result;
 }

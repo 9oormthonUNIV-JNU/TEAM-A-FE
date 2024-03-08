@@ -1,4 +1,3 @@
-import { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -40,7 +39,7 @@ const IconWrapper = styled.div`
   align-items: center;
 `;
 
-export const RecentItems: FunctionComponent = ({ data }: any) => {
+export const RecentItems = ({ data }: any) => {
   return (
     <ContainerFrameRoot>
       <IconFrame>
