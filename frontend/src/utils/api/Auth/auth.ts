@@ -10,9 +10,20 @@ export async function postSignup(data: any) {
   return result;
 }
 
+//회원가입 이메일 확인
+export async function postSignupEmailConfirm(data: string) {
+  const result = await api.post('/send-email', data);
+  return result;
+}
+//회원가입 인증번호 확인 요청
+export async function postSignupCodeConfirm(data: any) {
+  const result = await api.post('/email-confirm', data);
+  return result;
+}
+
 //사용자 이메일 인증요청
 export async function postEmailConfirm(data: string) {
-  const result = await api.post('/forgot-password/sendEmail', data);
+  const result = await api.post('/forgot-password/send-email', data);
   return result;
 }
 

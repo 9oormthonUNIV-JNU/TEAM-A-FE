@@ -93,19 +93,18 @@ const FundingFrame = () => {
     //유저가 있다면 들어가게 설정
     if (token) {
       setSearchHistory((prevHistory) => [...prevHistory, value]);
+      setValue('');
     }
 
     try {
-      console.log(value);
       const result = await searchProduct(value);
       console.log(result);
       if (result.status === 200) {
-        navigate(`/products/${value}`);
+        navigate(`/category/전체`, { state: value });
       }
     } catch (error) {
       console.log(error);
     }
-    console.log(value);
   };
 
   // const testApi = async () => {

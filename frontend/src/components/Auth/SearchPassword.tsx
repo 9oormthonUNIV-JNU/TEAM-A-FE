@@ -95,27 +95,27 @@ export default function SearchPassword() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
-  const [error] = useState('');
-  const emailConfirmHandler = () => {
+  const [error, setError] = useState('');
+  const emailConfirmHandler = async () => {
     try {
-      const result = postEmailConfirm(email);
+      const result: any = await postEmailConfirm(email);
       console.log(result);
-      // if(result.status === "error"){
-      //   setError(result.error)
-      // }
-    } catch (error) {
+      alert('이메일 전송 완료');
+    } catch (error: any) {
       console.log(error);
+      setError(error.response.data.error);
     }
   };
-
-  const codeConfirmHandler = () => {
+  console.log(error);
+  const codeConfirmHandler = async () => {
     try {
-      const result = postCodeConfirm({ email, code });
-      console.log(result);
-      // if (result === 200) {
-      //   //state를 백에서 받은 이메일로 변경
-      //   navigate('/auth/change-password', { state: 1 });
-      // }
+      const result: any = await postCodeConfirm({ email, usercode: code });
+      console.log(result.data.response);
+      const email1 = result.data.response;
+      if (result.status === 200) {
+        //state를 백에서 받은 이메일로 변경
+        navigate('/auth/change-password', { state: email1 });
+      }
     } catch (error) {
       console.log(error);
     }

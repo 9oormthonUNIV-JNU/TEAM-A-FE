@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import styled from 'styled-components';
 import testImg from '../../assets/images/mainLogo.svg';
 import ShareIcon from '@mui/icons-material/Share';
@@ -6,7 +6,17 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { detailProduct } from '../../utils/api/Products/product';
+import {
+  detailProduct,
+  postFundingApply,
+} from '../../utils/api/Products/product';
+import CreateIcon from '@mui/icons-material/Create';
+import avatarImage from '../../assets/images/avatar.svg';
+import { Input } from '@mui/material';
+import { getAuthToken } from '../../utils/tokenHandler';
+import Divider from '@mui/material/Divider';
+import dot from '../../assets/images/dot.svg';
+import { postFundingComment } from '../../utils/api/Products/comment';
 
 const FrameBIcon = styled.img`
   position: absolute;
@@ -265,7 +275,7 @@ const FRAME = styled.div`
 const InfoRoot = styled.div`
   position: relative;
   width: 100%;
-  height: 768px;
+  height: 200rem;
   overflow: hidden;
   letter-spacing: normal;
   text-align: left;
@@ -278,32 +288,53 @@ const InfoRoot = styled.div`
   }
 `;
 
-// interface IDetails {
-//   category: string;
-//   comments: [];
-//   fundingDescription: string;
-//   fundingId: number;
-//   fundingImages: [string];
-//   fundingPercent: number;
-//   fundingSummary: string;
-//   fundingTitle: string;
-//   individualPrice: number;
-//   state: string;
-// }
-
 const DetailUpper: FunctionComponent = () => {
+  const auth = getAuthToken();
   const navigate = useNavigate();
   const { productId } = useParams();
+  const [comment, setComment] = useState('');
+
+  const [commentChange, setCommentChange] = useState(false);
   const handleCategory = (e: any) => {
     const categoryId: string = e.target.id;
     navigate(`/category/${categoryId}`);
   };
 
+  const postComment = async (e: any) => {
+    e.preventDefault();
+    try {
+      const result = await postFundingComment({
+        fundingId: productId,
+        comment,
+      });
+      setCommentChange((v) => !v);
+      console.log(result);
+      setComment('');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fundingApply = async () => {
+    const headers = {
+      Authorization: auth,
+    };
+    try {
+      const result = await postFundingApply(productId, headers);
+      console.log(result);
+      alert('알림신청완료');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const { data, isError } = useQuery({
-    queryKey: ['Detail-funding', productId],
+    queryKey: ['Detail-funding', productId, commentChange],
     queryFn: () => detailProduct(productId),
+
+    // enabled:{}
   });
-  console.log(data?.data.response);
+
   if (isError) return <div>No data!</div>;
 
   return (
@@ -375,7 +406,7 @@ const DetailUpper: FunctionComponent = () => {
           <B2>{`${data?.data.response.individualPrice}원`}</B2>
           <ParentFrame>
             <OpenNotificationBtn>
-              <B3>오픈 알림 신청 하기</B3>
+              <B3 onClick={fundingApply}>오픈 알림 신청 하기</B3>
             </OpenNotificationBtn>
             <ComboIcon>
               <FavoriteBorderIcon sx={{ color: '#8F8F8F' }} fontSize="large" />
@@ -385,10 +416,254 @@ const DetailUpper: FunctionComponent = () => {
             </ComboIcon>
           </ParentFrame>
         </FrameJ>
+        <Divider />
         <div>{data?.data.response.fundingDescription}</div>
+        <Divider />
+        <DivRoot>
+          <Parent1>
+            <H12>댓글</H12>
+            <form onSubmit={postComment}>
+              <ChatBar
+                sx={{ fontSize: '50px' }}
+                placeholder={auth ? '댓글 입력' : '로그인 해주세요.'}
+                endAdornment={
+                  <CreateIcon fontSize="large" style={{ cursor: 'pointer' }} />
+                }
+                disabled={auth ? false : true}
+                value={comment}
+                onChange={(e: any) => setComment(e.target.value)}
+              />
+            </form>
+            {data?.data.response.comments
+              .slice(0)
+              .reverse()
+              .map((comment: any) => {
+                return (
+                  <Inner key={comment.commentId}>
+                    <EllipseParent>
+                      <FrameChild src={avatarImage} />
+                      <FrameWrapper>
+                        <IconoirmoreVertParent>
+                          <IconoirmoreVert loading="lazy" alt="" src={dot} />
+                          <FrameParent>
+                            <JkParent>
+                              <Jk>{comment.nickname}</Jk>
+                              <Div12>1분전</Div12>
+                            </JkParent>
+                            <Wrapper>
+                              <Div2>{comment.content}</Div2>
+                            </Wrapper>
+                          </FrameParent>
+                        </IconoirmoreVertParent>
+                      </FrameWrapper>
+                    </EllipseParent>
+                  </Inner>
+                );
+              })}
+          </Parent1>
+        </DivRoot>
       </FRAME>
     </InfoRoot>
   );
 };
 
 export default DetailUpper;
+//
+
+const H12 = styled.h2`
+  margin: 0;
+  height: 57px;
+  position: relative;
+  font-size: inherit;
+  font-weight: 700;
+  font-family: inherit;
+  display: inline-block;
+  @media screen and (max-width: 1050px) {
+    font-size: var(--font-size-19xl);
+  }
+  @media screen and (max-width: 450px) {
+    font-size: var(--font-size-10xl);
+  }
+`;
+
+const ChatBar = styled(Input)`
+  align-self: stretch;
+  border-radius: var(--br-11xl);
+  background-color: var(--color-white);
+  /* border: 1px solid var(--color-black); */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--padding-17xl) var(--padding-7xl) var(--padding-16xl)
+    var(--padding-28xl);
+  max-width: 100%;
+  gap: var(--gap-xl);
+  font-size: var(--font-size-17xl);
+  @media screen and (max-width: 1200px) {
+    padding-left: var(--padding-4xl);
+    box-sizing: border-box;
+  }
+  @media screen and (max-width: 450px) {
+    flex-wrap: wrap;
+  }
+`;
+const Parent1 = styled.section`
+  width: 1520px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 35px 0px;
+  max-width: 100%;
+  text-align: left;
+  font-size: var(--font-size-29xl);
+  color: var(--color-black);
+  font-family: var(--font-pretendard);
+  @media screen and (max-width: 750px) {
+    gap: 35px 0px;
+  }
+`;
+const FrameChild = styled.img`
+  height: 100px;
+  width: 100px;
+  position: relative;
+  border-radius: 50%;
+  background-color: var(--color-gainsboro-200);
+`;
+const IconoirmoreVert = styled.img`
+  height: 48px;
+  width: 48px;
+  position: absolute;
+  margin: 0 !important;
+  top: -33px;
+  right: -10px;
+  overflow: hidden;
+  flex-shrink: 0;
+`;
+const Jk = styled.div`
+  position: relative;
+  font-weight: 500;
+  @media screen and (max-width: 1050px) {
+    font-size: var(--font-size-10xl);
+  }
+  @media screen and (max-width: 450px) {
+    font-size: var(--font-size-3xl);
+  }
+`;
+const Div12 = styled.div`
+  position: relative;
+  font-size: var(--font-size-9xl);
+  font-weight: 500;
+  color: var(--color-gray-100);
+  @media screen and (max-width: 450px) {
+    font-size: var(--font-size-3xl);
+  }
+`;
+const JkParent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 6px 0px;
+`;
+const Div2 = styled.div`
+  flex: 1;
+  position: relative;
+  font-weight: 500;
+  display: inline-block;
+  max-width: 100%;
+  @media screen and (max-width: 450px) {
+    font-size: var(--font-size-3xl);
+  }
+`;
+const Wrapper = styled.div`
+  align-self: stretch;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0px 0px 0px var(--padding-9xs);
+  box-sizing: border-box;
+  max-width: 100%;
+  font-size: var(--font-size-9xl);
+`;
+const FrameParent = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 35px 0px;
+  max-width: 100%;
+  @media screen and (max-width: 750px) {
+    gap: 35px 0px;
+  }
+`;
+const IconoirmoreVertParent = styled.div`
+  align-self: stretch;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: relative;
+  max-width: 100%;
+`;
+const FrameWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: var(--padding-base) 0px 0px;
+  box-sizing: border-box;
+  min-width: 872px;
+  max-width: 100%;
+  @media screen and (max-width: 1050px) {
+    min-width: 100%;
+  }
+`;
+const EllipseParent = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0px 24px;
+  max-width: 100%;
+`;
+const Inner = styled.footer`
+  width: 1506px;
+  border-bottom: 1px solid var(--color-gray-100);
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--padding-32xl) var(--padding-xl);
+  min-height: 303px;
+  max-width: 100%;
+  flex-shrink: 0;
+  text-align: left;
+  font-size: var(--font-size-17xl);
+  color: var(--color-black);
+  font-family: var(--font-pretendard);
+`;
+const DivRoot = styled.div`
+  width: 95rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 55px var(--padding-xl);
+  box-sizing: border-box;
+  gap: 57px 0px;
+  letter-spacing: normal;
+  @media screen and (max-width: 750px) {
+    gap: 57px 0px;
+  }
+`;

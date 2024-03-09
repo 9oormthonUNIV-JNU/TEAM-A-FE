@@ -87,14 +87,14 @@ const Buttona = styled(Button)`
 
 export default function ChangePassword() {
   const { state } = useLocation();
-
+  console.log(state);
   const navigate = useNavigate();
   const [error, setError] = useState('');
   const [password, setPassword] = useState('');
   const [checkPassword, setCheckPassword] = useState('');
-  const onValid = () => {
+  const onValid = async () => {
     try {
-      const result = patchPassword({ password, checkPassword });
+      const result = await patchPassword({ state, password, checkPassword });
       console.log(result);
       if (!result) setError(error);
       navigate('/auth/login');
